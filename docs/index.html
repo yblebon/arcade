@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Brain Training Arcade (7 Games!)</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 900px; /* Slightly wider for more games */
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 25px;
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #2ecc71;
+            margin-top: 20px;
+            border-bottom: 1px dashed #2ecc71;
+            padding-bottom: 5px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+        }
+        .game-container {
+            background-color: #ffffff;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .game-output {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .game-button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            background-color: #3498db;
+            color: white;
+        }
+        .game-button:hover { background-color: #2980b9; }
+
+        /* Game Specific Styles */
+        #stroop-text { font-size: 3em; margin-bottom: 20px; height: 50px; line-height: 50px; }
+        #reaction-area { height: 100px; line-height: 100px; background-color: #c0392b; color: white; font-size: 1.5em; cursor: pointer; border-radius: 8px; user-select: none; }
+        .mem-square { display: inline-block; width: 40px; height: 40px; margin: 3px; background-color: #ccc; border-radius: 5px; cursor: pointer; }
+        .mem-flash { background-color: #f1c40f !important; }
+        
+        /* Chimp Test Styles */
+        #chimp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; width: 250px; height: 250px; margin: 10px auto; border: 1px solid #eee; }
+        .chimp-cell { background-color: #bdc3c7; border-radius: 5px; line-height: 50px; font-weight: bold; font-size: 1.2em; cursor: pointer; }
+        .chimp-number { background-color: #2ecc71; color: white; }
+        
+        /* Visual Search Styles */
+        #visual-search-area { display: flex; flex-wrap: wrap; justify-content: center; width: 300px; margin: 10px auto; }
+        .search-shape { width: 30px; height: 30px; background-color: #e74c3c; margin: 3px; border-radius: 50%; cursor: pointer; }
+        .target-shape { background-color: #3498db !important; }
+
+        /* Odd One Out Styles */
+        #odd-one-out-area { display: flex; justify-content: center; margin: 10px auto; }
+        .odd-shape { width: 50px; height: 50px; background-color: #9b59b6; margin: 5px; border-radius: 5px; cursor: pointer; }
+        .odd-shape.is-odd { background-color: #f39c12; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Mega Brain Training Arcade (7 Games!) 🕹️</h1>
+        <p class="note">A collection of cognitive games to sharpen your focus, memory, and reaction time. **Try a new game every 5 minutes!**</p>
+
+        <div class="section">
+            <h2>🎯 Attention & Processing Speed</h2>
+
+            <h3>1. Reaction Time Tester (Processing Speed)</h3>
+            <div class="game-container">
+                <p>Click the area when the color turns **GREEN**.</p>
+                <div id="reaction-area" onclick="startReactionGame()">Click anywhere to begin</div>
+                <div id="reaction-result" class="game-output"></div>
+            </div>
+
+            <h3>2. Stroop Effect Challenge (Selective Attention)</h3>
+            <div class="game-container">
+                <p>**RULE:** Click the button that matches the **COLOR** of the word, not what the word *says*.</p>
+                <div id="stroop-text" class="game-output"></div>
+                <button class="game-button" onclick="checkStroopAnswer('Red')" style="background-color: red;">Red</button>
+                <button class="game-button" onclick="checkStroopAnswer('Blue')" style="background-color: blue;">Blue</button>
+                <button class="game-button" onclick="checkStroopAnswer('Green')" style="background-color: green;">Green</button>
+                <button class="game-button" onclick="checkStroopAnswer('Yellow')" style="background-color: gold;">Yellow</button>
+                <div id="stroop-result"></div>
+            </div>
+
+            <h3>3. Visual Search (Sustained Attention)</h3>
+            <div class="game-container">
+                <p>Find and click the **BLUE** circle among the red ones. Find 5 to win.</p>
+                <div id="visual-search-area"></div>
+                <div id="visual-search-status" class="game-output">Score: 0</div>
+                <button class="game-button" onclick="startVisualSearch()">New Target</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧠 Memory & Cognitive Control</h2>
+            
+            <h3>4. Quick Math Challenge (Working Memory)</h3>
+            <div class="game-container">
+                <p>Solve the problem.</p>
+                <div id="math-problem" class="game-output">Press New Problem</div>
+                <input type="number" id="math-answer-input" placeholder="Answer" style="width: 100px; padding: 8px;">
+                <button class="game-button" onclick="checkMathAnswer()">Check</button>
+                <button class="game-button" onclick="generateMathProblem()">New Problem</button>
+                <div id="math-result"></div>
+            </div>
+            
+            <h3>5. Sequence Memory Game (Pattern Recognition)</h3>
+            <div class="game-container">
+                <p>Watch the squares flash. Click them in the exact same sequence.</p>
+                <div id="memory-board">
+                    <div class="mem-square" data-index="0" onclick="checkMemorySequence(0)"></div>
+                    <div class="mem-square" data-index="1" onclick="checkMemorySequence(1)"></div>
+                    <div class="mem-square" data-index="2" onclick="checkMemorySequence(2)"></div>
+                    <div class="mem-square" data-index="3" onclick="checkMemorySequence(3)"></div>
+                </div>
+                <div id="memory-level" class="game-output">Level: 1</div>
+                <button class="game-button" onclick="startMemoryGame()">Start / Next Level</button>
+                <div id="memory-status"></div>
+            </div>
+
+            <h3>6. Chimp Test (Flash Memory)</h3>
+            <div class="game-container">
+                <p>Remember the position of the numbers, then click them in ascending order (1, 2, 3...).</p>
+                <div id="chimp-grid"></div>
+                <div id="chimp-result" class="game-output">Click Start to begin.</div>
+                <button class="game-button" onclick="startChimpGame()">Start</button>
+            </div>
+
+            <h3>7. Odd One Out (Pattern Discrimination)</h3>
+            <div class="game-container">
+                <p>Click the shape that is visually different from the others (color or shape). Score 3 to win.</p>
+                <div id="odd-one-out-area"></div>
+                <div id="odd-one-out-status" class="game-output">Score: 0</div>
+                <button class="game-button" onclick="generateOddOneOut()">New Challenge</button>
+            </div>
+        </div>
+
+        <div class="note">
+            Enjoy your training! Refresh the page to reset scores and games.
+        </div>
+    </div>
+
+    <script>
+        // --- Shared Setup ---
+        window.onload = function() {
+            generateMathProblem();
+            generateStroop();
+            startVisualSearch(false);
+            generateOddOneOut(false);
+        };
+
+        // --- 1. REACTION TIME LOGIC ---
+        let state = 0; // 0=waiting, 1=ready, 2=clicked too soon
+        let startTime;
+        let timeoutId;
+        const reactionArea = document.getElementById('reaction-area');
+        const reactionResult = document.getElementById('reaction-result');
+
+        function resetReactionGame() {
+            clearTimeout(timeoutId);
+            state = 0;
+            reactionArea.style.backgroundColor = '#c0392b'; // Red
+            reactionArea.textContent = 'Click anywhere to begin';
+            reactionResult.textContent = '';
+        }
+
+        function startReactionGame() {
+            if (state === 0) {
+                reactionArea.textContent = 'Wait for GREEN...';
+                reactionResult.textContent = '...';
+                const delay = Math.random() * 2000 + 1500;
+                
+                timeoutId = setTimeout(() => {
+                    reactionArea.style.backgroundColor = '#2ecc71'; // Green (Go!)
+                    reactionArea.textContent = 'CLICK NOW!';
+                    startTime = Date.now();
+                    state = 1;
+                }, delay);
+
+                state = 2; 
+            } else if (state === 2) {
+                resetReactionGame();
+                reactionResult.textContent = '❌ Too soon! Wait for GREEN.';
+            } else if (state === 1) {
+                const endTime = Date.now();
+                const reactionTime = endTime - startTime;
+                resetReactionGame();
+                reactionResult.textContent = `✅ Your reaction time: ${reactionTime} ms`;
+            }
+        }
+
+        // --- 2. STROOP GAME LOGIC ---
+        const colors = ['Red', 'Blue', 'Green', 'Yellow'];
+        let currentStroopColor;
+
+        function generateStroop() {
+            const textWord = colors[Math.floor(Math.random() * colors.length)];
+            const textColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            currentStroopColor = textColor;
+            
+            const stroopTextElement = document.getElementById('stroop-text');
+            stroopTextElement.textContent = textWord;
+            stroopTextElement.style.color = textColor.toLowerCase();
+
+            document.getElementById('stroop-result').textContent = '';
+        }
+
+        function checkStroopAnswer(chosenColor) {
+            const resultDiv = document.getElementById('stroop-result');
+            
+            if (chosenColor.toLowerCase() === currentStroopColor.toLowerCase()) {
+                resultDiv.textContent = "✅ Correct!";
+                resultDiv.style.color = '#27ae60';
+            } else {
+                resultDiv.textContent = "❌ Incorrect. Try again!";
+                resultDiv.style.color = '#c0392b';
+            }
+            
+            setTimeout(generateStroop, 1000);
+        }
+
+        // --- 3. VISUAL SEARCH LOGIC (New Game) ---
+        let visualScore = 0;
+        let targetIndex = -1;
+        const visualArea = document.getElementById('visual-search-area');
+        const visualStatus = document.getElementById('visual-search-status');
+
+        function startVisualSearch(reset = true) {
+            if (reset) {
+                visualArea.innerHTML = '';
+                const totalShapes = 30;
+                targetIndex = Math.floor(Math.random() * totalShapes);
+
+                for (let i = 0; i < totalShapes; i++) {
+                    const shape = document.createElement('div');
+                    shape.className = 'search-shape';
+                    if (i === targetIndex) {
+                        shape.classList.add('target-shape');
+                    }
+                    shape.onclick = () => checkVisualAnswer(i);
+                    visualArea.appendChild(shape);
+                }
+                visualStatus.textContent = `Score: ${visualScore}`;
+            }
+        }
+
+        function checkVisualAnswer(index) {
+            if (index === targetIndex) {
+                visualScore++;
+                visualStatus.textContent = `✅ Found it! Score: ${visualScore}`;
+                if (visualScore >= 5) {
+                    visualStatus.textContent = `🏆 You won! Final Score: ${visualScore}`;
+                    visualScore = 0;
+                }
+                setTimeout(() => startVisualSearch(true), 500);
+            } else {
+                visualStatus.textContent = `❌ Keep looking! Score: ${visualScore}`;
+                // Optional: flash the incorrect clicked shape
+                const clickedShape = visualArea.children[index];
+                clickedShape.style.backgroundColor = 'black';
+                setTimeout(() => clickedShape.style.backgroundColor = '#e74c3c', 100);
+            }
+        }
+
+
+        // --- 4. MATH GAME LOGIC ---
+        let correctAnswer;
+        
+        function generateMathProblem() {
+            const num1 = Math.floor(Math.random() * 20) + 1;
+            const num2 = Math.floor(Math.random() * 15) + 1;
+            const operators = ['+', '-', '*'];
+            const operator = operators[Math.floor(Math.random() * operators.length)];
+            
+            let problem;
+            if (operator === '-') {
+                 problem = (num1 >= num2) ? `${num1} - ${num2}` : `${num2} - ${num1}`;
+                 correctAnswer = (num1 >= num2) ? num1 - num2 : num2 - num1;
+            } else if (operator === '+') {
+                correctAnswer = num1 + num2;
+                problem = `${num1} + ${num2}`;
+            } else if (operator === '*') {
+                correctAnswer = num1 * num2;
+                problem = `${num1} * ${num2}`;
+            }
+            
+            document.getElementById('math-problem').textContent = problem + ' = ?';
+            document.getElementById('math-result').textContent = '';
+            document.getElementById('math-answer-input').value = '';
+        }
+
+        function checkMathAnswer() {
+            const userAnswer = parseInt(document.getElementById('math-answer-input').value);
+            const resultDiv = document.getElementById('math-result');
+            
+            if (isNaN(userAnswer)) {
+                resultDiv.textContent = "Please enter a number.";
+                resultDiv.style.color = 'orange';
+                return;
+            }
+            
+            if (userAnswer === correctAnswer) {
+                resultDiv.textContent = "🎉 Correct!";
+                resultDiv.style.color = '#27ae60';
+                generateMathProblem();
+            } else {
+                resultDiv.textContent = `❌ Incorrect.`;
+                resultDiv.style.color = '#c0392b';
+            }
+        }
+
+
+        // --- 5. SEQUENCE MEMORY LOGIC ---
+        let sequence = [];
+        let playerSequence = [];
+        let level = 1;
+        let isFlashing = false;
+        const memorySquares = document.querySelectorAll('.mem-square');
+        const memoryLevelDisplay = document.getElementById('memory-level');
+        const memoryStatusDisplay = document.getElementById('memory-status');
+
+        function startMemoryGame() {
+            if (isFlashing) return;
+            memoryStatusDisplay.textContent = '';
+            playerSequence = [];
+            
+            const newSquareIndex = Math.floor(Math.random() * memorySquares.length);
+            sequence.push(newSquareIndex);
+            
+            memoryLevelDisplay.textContent = `Level: ${level}`;
+            flashSequence();
+        }
+
+        function flashSequence() {
+            isFlashing = true;
+            let i = 0;
+            const flashInterval = setInterval(() => {
+                const square = memorySquares[sequence[i]];
+                square.classList.add('mem-flash');
+                setTimeout(() => {
+                    square.classList.remove('mem-flash');
+                }, 300);
+
+                i++;
+                if (i >= sequence.length) {
+                    clearInterval(flashInterval);
+                    isFlashing = false;
+                    memoryStatusDisplay.textContent = 'Now repeat the sequence!';
+                }
+            }, 700);
+        }
+
+        function checkMemorySequence(index) {
+            if (isFlashing) return;
+
+            playerSequence.push(index);
+            const currentStep = playerSequence.length - 1;
+            const clickedSquare = memorySquares[index];
+
+            if (playerSequence[currentStep] !== sequence[currentStep]) {
+                clickedSquare.style.backgroundColor = '#e74c3c'; // Error color
+                memoryStatusDisplay.textContent = `❌ Game Over! Reached Level ${level}. Click Start to try again.`;
+                sequence = [];
+                level = 1;
+            } else if (playerSequence.length === sequence.length) {
+                memoryStatusDisplay.textContent = `✅ Success! Advancing to the next level.`;
+                level++;
+                setTimeout(startMemoryGame, 1500);
+            }
+            // Reset color briefly
+            clickedSquare.style.backgroundColor = '#3498db';
+            setTimeout(() => clickedSquare.style.backgroundColor = '', 100);
+        }
+        
+        // --- 6. CHIMP TEST LOGIC (New Game) ---
+        let chimpNumbers = [];
+        let chimpCurrentNumber = 1;
+        const chimpGrid = document.getElementById('chimp-grid');
+        const chimpResult = document.getElementById('chimp-result');
+
+        function startChimpGame() {
+            chimpGrid.innerHTML = '';
+            chimpNumbers = [];
+            chimpCurrentNumber = 1;
+            chimpResult.textContent = 'Click 1...';
+            
+            const numCount = 4; // Start with 4 numbers
+            let occupiedPositions = new Set();
+            
+            while (occupiedPositions.size < numCount) {
+                occupiedPositions.add(Math.floor(Math.random() * 25)); // Grid is 5x5 = 25 cells
+            }
+
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'chimp-cell';
+                
+                if (occupiedPositions.has(i)) {
+                    const number = chimpNumbers.length + 1;
+                    chimpNumbers.push({ index: i, number: number });
+                    cell.textContent = number;
+                    cell.classList.add('chimp-number');
+                    cell.onclick = () => checkChimpAnswer(number, cell);
+                } else {
+                    cell.textContent = '';
+                }
+                chimpGrid.appendChild(cell);
+            }
+
+            // Hide numbers after a short delay
+            setTimeout(() => {
+                chimpNumbers.forEach(item => {
+                    chimpGrid.children[item.index].textContent = '';
+                });
+            }, 1000);
+        }
+
+        function checkChimpAnswer(clickedNumber, cell) {
+            if (clickedNumber === chimpCurrentNumber) {
+                chimpResult.textContent = `Click ${chimpCurrentNumber + 1}...`;
+                cell.style.backgroundColor = '#27ae60'; // Success color
+                cell.onclick = null; // Disable future clicks
+                chimpCurrentNumber++;
+
+                if (chimpCurrentNumber > chimpNumbers.length) {
+                    chimpResult.textContent = '🎉 Level Complete! Try increasing the number count!';
+                }
+            } else {
+                chimpResult.textContent = '❌ Incorrect! Start again.';
+                // Show all numbers for feedback
+                chimpNumbers.forEach(item => {
+                    chimpGrid.children[item.index].textContent = item.number;
+                });
+                // Reset state
+                chimpCurrentNumber = 1;
+                chimpNumbers = [];
+            }
+        }
+
+        // --- 7. ODD ONE OUT LOGIC (New Game) ---
+        let oddScore = 0;
+        let oddOneOutIndex = -1;
+        const oddArea = document.getElementById('odd-one-out-area');
+        const oddStatus = document.getElementById('odd-one-out-status');
+        
+        function generateOddOneOut(reset = true) {
+            if (reset) {
+                oddArea.innerHTML = '';
+                const totalShapes = 5; 
+                oddOneOutIndex = Math.floor(Math.random() * totalShapes);
+                
+                // Determine the "odd" factor: 0=color, 1=shape (e.g., square vs circle)
+                const oddFactor = Math.random() < 0.5 ? 0 : 1; 
+
+                for (let i = 0; i < totalShapes; i++) {
+                    const shape = document.createElement('div');
+                    shape.className = 'odd-shape';
+
+                    if (i === oddOneOutIndex) {
+                        shape.classList.add('is-odd'); 
+                        if (oddFactor === 1) { // Odd by shape (make it a circle instead of square)
+                           shape.style.borderRadius = '50%';
+                        } else { // Odd by color (already set by is-odd class)
+                           shape.style.borderRadius = '5px';
+                        }
+                    } else {
+                        // Standard shapes
+                        shape.style.borderRadius = '5px'; // Square/Rectangle
+                    }
+                    shape.onclick = () => checkOddOneOut(i);
+                    oddArea.appendChild(shape);
+                }
+                oddStatus.textContent = `Score: ${oddScore}`;
+            }
+        }
+
+        function checkOddOneOut(index) {
+            if (index === oddOneOutIndex) {
+                oddScore++;
+                oddStatus.textContent = `✅ Correct! Score: ${oddScore}`;
+                if (oddScore >= 3) {
+                    oddStatus.textContent = `🏆 You Won the round! Final Score: ${oddScore}`;
+                    oddScore = 0;
+                }
+                setTimeout(() => generateOddOneOut(true), 500);
+            } else {
+                oddStatus.textContent = `❌ Incorrect. Try again! Score: ${oddScore}`;
+            }
+        }
+
+    </script>
+</body>
+</html>
