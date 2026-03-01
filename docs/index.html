@@ -1,534 +1,1618 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Brain Training Arcade (7 Games!)</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-        .container {
-            max-width: 900px; /* Slightly wider for more games */
-            margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #3498db;
-            margin-top: 25px;
-            border-left: 5px solid #3498db;
-            padding-left: 10px;
-        }
-        h3 {
-            color: #2ecc71;
-            margin-top: 20px;
-            border-bottom: 1px dashed #2ecc71;
-            padding-bottom: 5px;
-        }
-        .section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background-color: #ecf0f1;
-            border-radius: 8px;
-        }
-        .game-container {
-            background-color: #ffffff;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
-        .game-output {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .game-button {
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            background-color: #3498db;
-            color: white;
-        }
-        .game-button:hover { background-color: #2980b9; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURAL ARCADE — Brain Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a14;
+    --surface: #0d1526;
+    --surface2: #111e35;
+    --neon-blue: #00d4ff;
+    --neon-green: #00ff9f;
+    --neon-pink: #ff2d78;
+    --neon-yellow: #ffe600;
+    --neon-purple: #bf5fff;
+    --neon-orange: #ff6b00;
+    --text: #c8d8f0;
+    --text-dim: #5a7090;
+    --border: #1a3060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* Scanline effect */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-        /* Game Specific Styles */
-        #stroop-text { font-size: 3em; margin-bottom: 20px; height: 50px; line-height: 50px; }
-        #reaction-area { height: 100px; line-height: 100px; background-color: #c0392b; color: white; font-size: 1.5em; cursor: pointer; border-radius: 8px; user-select: none; }
-        .mem-square { display: inline-block; width: 40px; height: 40px; margin: 3px; background-color: #ccc; border-radius: 5px; cursor: pointer; }
-        .mem-flash { background-color: #f1c40f !important; }
-        
-        /* Chimp Test Styles */
-        #chimp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; width: 250px; height: 250px; margin: 10px auto; border: 1px solid #eee; }
-        .chimp-cell { background-color: #bdc3c7; border-radius: 5px; line-height: 50px; font-weight: bold; font-size: 1.2em; cursor: pointer; }
-        .chimp-number { background-color: #2ecc71; color: white; }
-        
-        /* Visual Search Styles */
-        #visual-search-area { display: flex; flex-wrap: wrap; justify-content: center; width: 300px; margin: 10px auto; }
-        .search-shape { width: 30px; height: 30px; background-color: #e74c3c; margin: 3px; border-radius: 50%; cursor: pointer; }
-        .target-shape { background-color: #3498db !important; }
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 32px 20px 16px;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.6rem, 5vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-green), var(--neon-blue));
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+    text-shadow: none;
+    filter: drop-shadow(0 0 18px rgba(0,212,255,0.5));
+  }
+  @keyframes shimmer { to { background-position: 200% center; } }
+  header p {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
 
-        /* Odd One Out Styles */
-        #odd-one-out-area { display: flex; justify-content: center; margin: 10px auto; }
-        .odd-shape { width: 50px; height: 50px; background-color: #9b59b6; margin: 5px; border-radius: 5px; cursor: pointer; }
-        .odd-shape.is-odd { background-color: #f39c12; }
+  /* ── NAV TABS ── */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(5,10,20,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    padding: 7px 13px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .tab:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+  .tab.active { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,212,255,0.08); box-shadow: 0 0 10px rgba(0,212,255,0.2); }
 
-    </style>
+  /* ── MAIN LAYOUT ── */
+  main { padding: 24px 20px 60px; max-width: 780px; margin: auto; }
+  .game-panel { display: none; }
+  .game-panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── GAME CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .card.blue::before  { background: linear-gradient(90deg, transparent, var(--neon-blue), transparent); }
+  .card.green::before { background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
+  .card.pink::before  { background: linear-gradient(90deg, transparent, var(--neon-pink), transparent); }
+  .card.yellow::before{ background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent); }
+  .card.purple::before{ background: linear-gradient(90deg, transparent, var(--neon-purple), transparent); }
+  .card.orange::before{ background: linear-gradient(90deg, transparent, var(--neon-orange), transparent); }
+
+  .game-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .game-title.blue   { color: var(--neon-blue); }
+  .game-title.green  { color: var(--neon-green); }
+  .game-title.pink   { color: var(--neon-pink); }
+  .game-title.yellow { color: var(--neon-yellow); }
+  .game-title.purple { color: var(--neon-purple); }
+  .game-title.orange { color: var(--neon-orange); }
+
+  .game-desc {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    font-family: 'Share Tech Mono', monospace;
+    line-height: 1.6;
+  }
+
+  /* ── HUD BAR ── */
+  .hud {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .hud-item {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hud-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .hud-val.blue   { color: var(--neon-blue); }
+  .hud-val.green  { color: var(--neon-green); }
+  .hud-val.pink   { color: var(--neon-pink); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin: 4px;
+    font-weight: 700;
+  }
+  .btn-primary {
+    background: var(--neon-blue);
+    color: var(--bg);
+  }
+  .btn-primary:hover { box-shadow: 0 0 16px rgba(0,212,255,0.6); transform: translateY(-1px); }
+  .btn-success {
+    background: var(--neon-green);
+    color: var(--bg);
+  }
+  .btn-danger  { background: var(--neon-pink); color: white; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .btn-outline:hover { border-color: var(--text-dim); color: var(--text); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* answer buttons row */
+  .answer-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; justify-content: center; }
+  .ans-btn {
+    padding: 12px 22px;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600;
+    transition: all 0.15s;
+    min-width: 90px;
+  }
+  .ans-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,212,255,0.06); }
+  .ans-btn.correct { border-color: var(--neon-green) !important; background: rgba(0,255,159,0.15) !important; color: var(--neon-green) !important; }
+  .ans-btn.wrong   { border-color: var(--neon-pink) !important; background: rgba(255,45,120,0.15) !important; color: var(--neon-pink) !important; }
+
+  /* ── STATUS MESSAGE ── */
+  .status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    min-height: 26px;
+    text-align: center;
+    margin: 10px 0;
+    transition: all 0.2s;
+  }
+  .status.ok  { color: var(--neon-green); }
+  .status.err { color: var(--neon-pink); }
+  .status.info{ color: var(--neon-blue); }
+  .status.warn{ color: var(--neon-yellow); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap { background: var(--surface2); height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
+  .progress-bar  { height: 100%; border-radius: 3px; transition: width 0.3s; background: var(--neon-blue); }
+
+  /* ── REACTION GAME ── */
+  #react-zone {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    transition: background 0.1s;
+    user-select: none;
+    margin: 16px 0;
+  }
+  #react-zone.wait   { background: rgba(255,45,120,0.2); border: 2px solid var(--neon-pink); color: var(--neon-pink); }
+  #react-zone.ready  { background: rgba(0,255,159,0.2); border: 2px solid var(--neon-green); color: var(--neon-green); animation: pulse 0.3s ease-in-out 3; }
+  #react-zone.idle   { background: var(--surface2); border: 2px dashed var(--border); color: var(--text-dim); }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+
+  /* ── STROOP ── */
+  #stroop-word {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    padding: 20px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 20px currentColor;
+    transition: all 0.2s;
+  }
+  .stroop-timer-bar { background: var(--neon-pink); }
+
+  /* ── VISUAL SEARCH ── */
+  #vs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    padding: 12px;
+    background: var(--surface2);
+    border-radius: 8px;
+    margin: 12px 0;
+  }
+  .vs-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s;
+    border: 2px solid transparent;
+  }
+  .vs-dot:hover { transform: scale(1.2); }
+
+  /* ── MATH ── */
+  #math-eq {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--neon-yellow);
+    margin: 16px 0;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 20px rgba(255,230,0,0.4);
+  }
+  .math-input-row { display: flex; gap: 8px; justify-content: center; align-items: center; margin: 12px 0; }
+  #math-input {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    color: var(--text);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    padding: 10px 16px;
+    border-radius: 8px;
+    width: 140px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #math-input:focus { border-color: var(--neon-yellow); }
+
+  /* ── SEQUENCE MEMORY ── */
+  #seq-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 300px;
+    margin: 16px auto;
+  }
+  .seq-tile {
+    height: 60px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .seq-tile:hover:not(.inactive) { filter: brightness(1.3); transform: scale(1.02); }
+  .seq-tile.lit { filter: brightness(2.5); transform: scale(1.05); box-shadow: 0 0 20px currentColor; }
+  .seq-tile.inactive { cursor: not-allowed; opacity: 0.5; }
+
+  /* ── CHIMP ── */
+  #chimp-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    max-width: 280px;
+    margin: 16px auto;
+  }
+  .chimp-cell {
+    height: 50px;
+    border-radius: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--bg);
+    user-select: none;
+  }
+  .chimp-cell:hover { filter: brightness(1.2); }
+  .chimp-cell.active { background: var(--neon-green); }
+  .chimp-cell.done   { background: rgba(0,255,159,0.2); border-color: var(--neon-green); }
+  .chimp-cell.wrong  { background: rgba(255,45,120,0.3); border-color: var(--neon-pink); animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+  /* ── ODD ONE OUT ── */
+  #odd-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 16px 0;
+  }
+  .odd-item {
+    width: 52px; height: 52px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    flex-shrink: 0;
+  }
+  .odd-item:hover { transform: scale(1.1); }
+
+  /* ── N-BACK ── */
+  #nback-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 220px;
+    margin: 16px auto;
+  }
+  .nback-cell {
+    height: 60px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .nback-cell.lit { background: var(--neon-purple); box-shadow: 0 0 20px rgba(191,95,255,0.5); border-color: var(--neon-purple); }
+
+  .nback-btns { display: flex; gap: 12px; justify-content: center; margin: 12px 0; }
+  .nback-btn {
+    padding: 12px 30px;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 700;
+  }
+  .nback-btn.match-btn:hover, .nback-btn.match-btn.pressed { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,255,159,0.08); }
+  .nback-btn.no-match-btn:hover, .nback-btn.no-match-btn.pressed { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,120,0.08); }
+
+  /* ── SPEED TYPING ── */
+  #typing-target {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    line-height: 1.8;
+    padding: 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    margin: 12px 0;
+    min-height: 60px;
+    word-break: break-word;
+    letter-spacing: 0.05em;
+  }
+  .char-done    { color: var(--neon-green); }
+  .char-wrong   { color: var(--neon-pink); text-decoration: underline; }
+  .char-pending { color: var(--text-dim); }
+  .char-cursor  { border-left: 2px solid var(--neon-blue); animation: blink 0.8s step-end infinite; }
+  @keyframes blink { 50%{border-color:transparent} }
+
+  #typing-input {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    padding: 10px 16px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #typing-input:focus { border-color: var(--neon-orange); }
+
+  /* ── COLOR MATCH ── */
+  #cm-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    text-align: center;
+    padding: 20px;
+    letter-spacing: 0.08em;
+    transition: all 0.15s;
+  }
+  #cm-box-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  #cm-rule-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-align: center;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0 auto 12px;
+  }
+  .cm-rule-match  { color: var(--neon-green); border-color: var(--neon-green); }
+  .cm-rule-color  { color: var(--neon-blue);  border-color: var(--neon-blue); }
+  .cm-rule-both   { color: var(--neon-purple); border-color: var(--neon-purple); }
+  #cm-rule-wrap   { text-align: center; margin-bottom: 12px; }
+
+  /* ── WORD SCRAMBLE ── */
+  #ws-scrambled {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--neon-orange);
+    letter-spacing: 0.25em;
+    margin: 16px 0;
+    text-shadow: 0 0 20px rgba(255,107,0,0.4);
+  }
+  .ws-options { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 12px 0; }
+  .ws-option {
+    padding: 10px 20px;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    min-width: 110px;
+    text-align: center;
+  }
+  .ws-option:hover { border-color: var(--neon-orange); color: var(--neon-orange); }
+  .ws-option.correct { border-color: var(--neon-green) !important; color: var(--neon-green) !important; background: rgba(0,255,159,0.12) !important; }
+  .ws-option.wrong   { border-color: var(--neon-pink)  !important; color: var(--neon-pink)  !important; background: rgba(255,45,120,0.12) !important; }
+
+  /* ── CATEGORY SORT ── */
+  #cs-item {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text);
+    margin: 20px 0 10px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #cs-item .item-tag {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    padding: 12px 28px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+  }
+  .cs-cats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cs-cat-btn {
+    padding: 14px 28px;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    min-width: 130px;
+    text-align: center;
+  }
+  .cs-cat-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
+  .cs-cat-btn.correct { border-color: var(--neon-green) !important; background: rgba(0,255,159,0.1) !important; color: var(--neon-green) !important; }
+  .cs-cat-btn.wrong   { border-color: var(--neon-pink)  !important; background: rgba(255,45,120,0.1) !important; color: var(--neon-pink)  !important; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 520px) {
+    nav { gap: 4px; padding: 10px 12px; }
+    .tab { font-size: 0.5rem; padding: 6px 9px; }
+    #stroop-word { font-size: 2rem; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🧠 Mega Brain Training Arcade (7 Games!) 🕹️</h1>
-        <p class="note">A collection of cognitive games to sharpen your focus, memory, and reaction time. **Try a new game every 5 minutes!**</p>
 
-        <div class="section">
-            <h2>🎯 Attention & Processing Speed</h2>
+<header>
+  <h1>◈ NEURAL ARCADE ◈</h1>
+  <p>11 cognitive training games // sharpen your mind</p>
+</header>
 
-            <h3>1. Reaction Time Tester (Processing Speed)</h3>
-            <div class="game-container">
-                <p>Click the area when the color turns **GREEN**.</p>
-                <div id="reaction-area" onclick="startReactionGame()">Click anywhere to begin</div>
-                <div id="reaction-result" class="game-output"></div>
-            </div>
+<nav id="nav">
+  <div class="tab active" onclick="showGame(0)">⚡ REACT</div>
+  <div class="tab" onclick="showGame(1)">🎨 STROOP</div>
+  <div class="tab" onclick="showGame(2)">👁 SEARCH</div>
+  <div class="tab" onclick="showGame(3)">🔢 MATH</div>
+  <div class="tab" onclick="showGame(4)">💡 SEQUENCE</div>
+  <div class="tab" onclick="showGame(5)">🦧 CHIMP</div>
+  <div class="tab" onclick="showGame(6)">🔍 ODD ONE</div>
+  <div class="tab" onclick="showGame(7)">🧠 N-BACK</div>
+  <div class="tab" onclick="showGame(8)">⌨️ TYPING</div>
+  <div class="tab" onclick="showGame(9)">🎯 COLOR MATCH</div>
+  <div class="tab" onclick="showGame(10)">📚 WORD SORT</div>
+</nav>
 
-            <h3>2. Stroop Effect Challenge (Selective Attention)</h3>
-            <div class="game-container">
-                <p>**RULE:** Click the button that matches the **COLOR** of the word, not what the word *says*.</p>
-                <div id="stroop-text" class="game-output"></div>
-                <button class="game-button" onclick="checkStroopAnswer('Red')" style="background-color: red;">Red</button>
-                <button class="game-button" onclick="checkStroopAnswer('Blue')" style="background-color: blue;">Blue</button>
-                <button class="game-button" onclick="checkStroopAnswer('Green')" style="background-color: green;">Green</button>
-                <button class="game-button" onclick="checkStroopAnswer('Yellow')" style="background-color: gold;">Yellow</button>
-                <div id="stroop-result"></div>
-            </div>
+<main>
 
-            <h3>3. Visual Search (Sustained Attention)</h3>
-            <div class="game-container">
-                <p>Find and click the **BLUE** circle among the red ones. Find 5 to win.</p>
-                <div id="visual-search-area"></div>
-                <div id="visual-search-status" class="game-output">Score: 0</div>
-                <button class="game-button" onclick="startVisualSearch()">New Target</button>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>🧠 Memory & Cognitive Control</h2>
-            
-            <h3>4. Quick Math Challenge (Working Memory)</h3>
-            <div class="game-container">
-                <p>Solve the problem.</p>
-                <div id="math-problem" class="game-output">Press New Problem</div>
-                <input type="number" id="math-answer-input" placeholder="Answer" style="width: 100px; padding: 8px;">
-                <button class="game-button" onclick="checkMathAnswer()">Check</button>
-                <button class="game-button" onclick="generateMathProblem()">New Problem</button>
-                <div id="math-result"></div>
-            </div>
-            
-            <h3>5. Sequence Memory Game (Pattern Recognition)</h3>
-            <div class="game-container">
-                <p>Watch the squares flash. Click them in the exact same sequence.</p>
-                <div id="memory-board">
-                    <div class="mem-square" data-index="0" onclick="checkMemorySequence(0)"></div>
-                    <div class="mem-square" data-index="1" onclick="checkMemorySequence(1)"></div>
-                    <div class="mem-square" data-index="2" onclick="checkMemorySequence(2)"></div>
-                    <div class="mem-square" data-index="3" onclick="checkMemorySequence(3)"></div>
-                </div>
-                <div id="memory-level" class="game-output">Level: 1</div>
-                <button class="game-button" onclick="startMemoryGame()">Start / Next Level</button>
-                <div id="memory-status"></div>
-            </div>
-
-            <h3>6. Chimp Test (Flash Memory)</h3>
-            <div class="game-container">
-                <p>Remember the position of the numbers, then click them in ascending order (1, 2, 3...).</p>
-                <div id="chimp-grid"></div>
-                <div id="chimp-result" class="game-output">Click Start to begin.</div>
-                <button class="game-button" onclick="startChimpGame()">Start</button>
-            </div>
-
-            <h3>7. Odd One Out (Pattern Discrimination)</h3>
-            <div class="game-container">
-                <p>Click the shape that is visually different from the others (color or shape). Score 3 to win.</p>
-                <div id="odd-one-out-area"></div>
-                <div id="odd-one-out-status" class="game-output">Score: 0</div>
-                <button class="game-button" onclick="generateOddOneOut()">New Challenge</button>
-            </div>
-        </div>
-
-        <div class="note">
-            Enjoy your training! Refresh the page to reset scores and games.
-        </div>
+<!-- ─── GAME 0: REACTION TIME ─── -->
+<div class="game-panel active" id="p0">
+  <div class="card blue">
+    <div class="game-title blue">⚡ REACTION TIME TESTER</div>
+    <div class="game-desc">Click when the zone turns GREEN. Higher levels add random false flashes to trick you.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val blue" id="rt-level">1</span></div>
+      <div class="hud-item">BEST <span class="hud-val green" id="rt-best">—</span></div>
+      <div class="hud-item">STREAK <span class="hud-val" id="rt-streak">0</span></div>
     </div>
+    <div id="react-zone" class="idle" onclick="handleReact()">TAP TO START</div>
+    <div class="status info" id="rt-status">Click the zone to begin the test</div>
+    <div id="rt-history" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--text-dim);text-align:center;min-height:20px;"></div>
+  </div>
+</div>
 
-    <script>
-        // --- Shared Setup ---
-        window.onload = function() {
-            generateMathProblem();
-            generateStroop();
-            startVisualSearch(false);
-            generateOddOneOut(false);
-        };
+<!-- ─── GAME 1: STROOP ─── -->
+<div class="game-panel" id="p1">
+  <div class="card pink">
+    <div class="game-title pink">🎨 STROOP CHALLENGE</div>
+    <div class="game-desc">Click the button matching the TEXT COLOR (not the word meaning). Under time pressure — the faster you go, the higher your score. Higher levels add more colors.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val pink" id="st-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="st-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val green" id="st-streak">0</span></div>
+    </div>
+    <div id="stroop-timer-wrap" class="progress-wrap"><div class="progress-bar stroop-timer-bar" id="stroop-bar" style="width:100%"></div></div>
+    <div id="stroop-word">———</div>
+    <div class="answer-row" id="stroop-btns"></div>
+    <div class="status" id="st-status">Press Start to play</div>
+    <button class="btn btn-primary" onclick="startStroop()">START</button>
+  </div>
+</div>
 
-        // --- 1. REACTION TIME LOGIC ---
-        let state = 0; // 0=waiting, 1=ready, 2=clicked too soon
-        let startTime;
-        let timeoutId;
-        const reactionArea = document.getElementById('reaction-area');
-        const reactionResult = document.getElementById('reaction-result');
+<!-- ─── GAME 2: VISUAL SEARCH ─── -->
+<div class="game-panel" id="p2">
+  <div class="card blue">
+    <div class="game-title blue">👁 VISUAL SEARCH</div>
+    <div class="game-desc">Find the unique colored dot. Higher levels add more distractors and multiple targets per round.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val blue" id="vs-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="vs-score">0</span></div>
+      <div class="hud-item">TO WIN <span class="hud-val" id="vs-target">5</span></div>
+    </div>
+    <div id="vs-grid"></div>
+    <div class="status" id="vs-status">Click Start to begin</div>
+    <button class="btn btn-primary" onclick="startVisSearch()">START / NEXT</button>
+  </div>
+</div>
 
-        function resetReactionGame() {
-            clearTimeout(timeoutId);
-            state = 0;
-            reactionArea.style.backgroundColor = '#c0392b'; // Red
-            reactionArea.textContent = 'Click anywhere to begin';
-            reactionResult.textContent = '';
-        }
+<!-- ─── GAME 3: MATH ─── -->
+<div class="game-panel" id="p3">
+  <div class="card yellow">
+    <div class="game-title yellow">🔢 QUICK MATH</div>
+    <div class="game-desc">Solve equations quickly. Higher levels: larger numbers, chained multi-step problems, and time pressure.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val yellow" id="m-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="m-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val green" id="m-streak">0</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="m-bar" style="width:100%;background:var(--neon-yellow)"></div></div>
+    <div id="math-eq">PRESS START</div>
+    <div class="math-input-row">
+      <input type="number" id="math-input" placeholder="?" onkeydown="if(event.key==='Enter')checkMath()">
+      <button class="btn btn-primary" onclick="checkMath()">✓</button>
+    </div>
+    <div class="status" id="m-status"></div>
+    <button class="btn btn-primary" onclick="startMath()">START</button>
+    <button class="btn btn-outline" onclick="newMathProblem()">SKIP</button>
+  </div>
+</div>
 
-        function startReactionGame() {
-            if (state === 0) {
-                reactionArea.textContent = 'Wait for GREEN...';
-                reactionResult.textContent = '...';
-                const delay = Math.random() * 2000 + 1500;
-                
-                timeoutId = setTimeout(() => {
-                    reactionArea.style.backgroundColor = '#2ecc71'; // Green (Go!)
-                    reactionArea.textContent = 'CLICK NOW!';
-                    startTime = Date.now();
-                    state = 1;
-                }, delay);
+<!-- ─── GAME 4: SEQUENCE MEMORY ─── -->
+<div class="game-panel" id="p4">
+  <div class="card green">
+    <div class="game-title green">💡 SEQUENCE MEMORY</div>
+    <div class="game-desc">Watch tiles light up, then repeat the sequence. Each level adds one more step. Higher levels speed up playback.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val green" id="seq-level">1</span></div>
+      <div class="hud-item">BEST <span class="hud-val" id="seq-best">0</span></div>
+    </div>
+    <div id="seq-board">
+      <div class="seq-tile" style="background:rgba(255,45,120,0.4);border-color:var(--neon-pink);" data-i="0" onclick="seqClick(0)"></div>
+      <div class="seq-tile" style="background:rgba(0,212,255,0.4);border-color:var(--neon-blue);" data-i="1" onclick="seqClick(1)"></div>
+      <div class="seq-tile" style="background:rgba(0,255,159,0.4);border-color:var(--neon-green);" data-i="2" onclick="seqClick(2)"></div>
+      <div class="seq-tile" style="background:rgba(255,230,0,0.4);border-color:var(--neon-yellow);" data-i="3" onclick="seqClick(3)"></div>
+      <div class="seq-tile" style="background:rgba(191,95,255,0.4);border-color:var(--neon-purple);" data-i="4" onclick="seqClick(4)"></div>
+      <div class="seq-tile" style="background:rgba(255,107,0,0.4);border-color:var(--neon-orange);" data-i="5" onclick="seqClick(5)"></div>
+    </div>
+    <div class="status" id="seq-status">Press Start to play</div>
+    <button class="btn btn-success" onclick="startSequence()">START</button>
+  </div>
+</div>
 
-                state = 2; 
-            } else if (state === 2) {
-                resetReactionGame();
-                reactionResult.textContent = '❌ Too soon! Wait for GREEN.';
-            } else if (state === 1) {
-                const endTime = Date.now();
-                const reactionTime = endTime - startTime;
-                resetReactionGame();
-                reactionResult.textContent = `✅ Your reaction time: ${reactionTime} ms`;
-            }
-        }
+<!-- ─── GAME 5: CHIMP ─── -->
+<div class="game-panel" id="p5">
+  <div class="card green">
+    <div class="game-title green">🦧 CHIMP TEST</div>
+    <div class="game-desc">Numbers flash briefly. Click them in ascending order (1, 2, 3...). Each level adds more numbers. Beat all levels to win!</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val green" id="ch-level">1</span></div>
+      <div class="hud-item">NUMBERS <span class="hud-val" id="ch-count">4</span></div>
+      <div class="hud-item">LIVES <span class="hud-val pink" id="ch-lives">3</span></div>
+    </div>
+    <div id="chimp-grid"></div>
+    <div class="status" id="ch-status">Press Start to begin</div>
+    <button class="btn btn-success" onclick="startChimp()">START</button>
+  </div>
+</div>
 
-        // --- 2. STROOP GAME LOGIC ---
-        const colors = ['Red', 'Blue', 'Green', 'Yellow'];
-        let currentStroopColor;
+<!-- ─── GAME 6: ODD ONE OUT ─── -->
+<div class="game-panel" id="p6">
+  <div class="card purple">
+    <div class="game-title purple">🔍 ODD ONE OUT</div>
+    <div class="game-desc">Find the shape that differs. Higher levels: more shapes, subtler color differences, and mixed shape types.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val purple" id="odd-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="odd-score">0</span></div>
+      <div class="hud-item">TO WIN <span class="hud-val" id="odd-target">5</span></div>
+    </div>
+    <div id="odd-grid"></div>
+    <div class="status" id="odd-status">Press Start to begin</div>
+    <button class="btn btn-primary" style="background:var(--neon-purple);color:white;" onclick="startOdd()">START / NEXT</button>
+  </div>
+</div>
 
-        function generateStroop() {
-            const textWord = colors[Math.floor(Math.random() * colors.length)];
-            const textColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            currentStroopColor = textColor;
-            
-            const stroopTextElement = document.getElementById('stroop-text');
-            stroopTextElement.textContent = textWord;
-            stroopTextElement.style.color = textColor.toLowerCase();
+<!-- ─── GAME 7: N-BACK ─── -->
+<div class="game-panel" id="p7">
+  <div class="card purple">
+    <div class="game-title purple">🧠 N-BACK CHALLENGE</div>
+    <div class="game-desc">A square lights up each round. Decide if the current position matches the one from N steps ago. Higher levels increase N.</div>
+    <div class="hud">
+      <div class="hud-item">N = <span class="hud-val purple" id="nb-n">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="nb-score">0</span></div>
+      <div class="hud-item">HITS <span class="hud-val green" id="nb-hits">0</span></div>
+      <div class="hud-item">ERRORS <span class="hud-val pink" id="nb-errors">0</span></div>
+    </div>
+    <div id="nback-grid">
+      <div class="nback-cell" id="nb0"></div>
+      <div class="nback-cell" id="nb1"></div>
+      <div class="nback-cell" id="nb2"></div>
+      <div class="nback-cell" id="nb3"></div>
+      <div class="nback-cell" id="nb4"></div>
+      <div class="nback-cell" id="nb5"></div>
+      <div class="nback-cell" id="nb6"></div>
+      <div class="nback-cell" id="nb7"></div>
+      <div class="nback-cell" id="nb8"></div>
+    </div>
+    <div class="nback-btns">
+      <button class="nback-btn match-btn" id="nb-match-btn" onclick="nbAnswer(true)" disabled>✓ MATCH</button>
+      <button class="nback-btn no-match-btn" id="nb-nomatch-btn" onclick="nbAnswer(false)" disabled>✗ NO MATCH</button>
+    </div>
+    <div class="status" id="nb-status">Press Start · identify if current position matches N steps back</div>
+    <button class="btn btn-primary" style="background:var(--neon-purple);color:white;" onclick="startNBack()">START</button>
+    <button class="btn btn-outline" onclick="stopNBack()">STOP</button>
+  </div>
+</div>
 
-            document.getElementById('stroop-result').textContent = '';
-        }
+<!-- ─── GAME 8: SPEED TYPING ─── -->
+<div class="game-panel" id="p8">
+  <div class="card orange">
+    <div class="game-title orange">⌨️ SPEED TYPING</div>
+    <div class="game-desc">Type the displayed text as fast and accurately as possible. Higher levels: longer phrases, punctuation, numbers.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val orange" id="tp-level">1</span></div>
+      <div class="hud-item">WPM <span class="hud-val" id="tp-wpm">—</span></div>
+      <div class="hud-item">ACC <span class="hud-val green" id="tp-acc">—</span></div>
+      <div class="hud-item">BEST WPM <span class="hud-val" id="tp-best">—</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="tp-bar" style="width:0%;background:var(--neon-orange)"></div></div>
+    <div id="typing-target"></div>
+    <input type="text" id="typing-input" placeholder="Start typing here..." autocomplete="off" autocorrect="off" spellcheck="false" oninput="handleTyping()" disabled>
+    <div class="status" id="tp-status">Press Start to load a prompt</div>
+    <button class="btn btn-primary" style="background:var(--neon-orange);color:white;" onclick="startTyping()">START</button>
+  </div>
+</div>
 
-        function checkStroopAnswer(chosenColor) {
-            const resultDiv = document.getElementById('stroop-result');
-            
-            if (chosenColor.toLowerCase() === currentStroopColor.toLowerCase()) {
-                resultDiv.textContent = "✅ Correct!";
-                resultDiv.style.color = '#27ae60';
-            } else {
-                resultDiv.textContent = "❌ Incorrect. Try again!";
-                resultDiv.style.color = '#c0392b';
-            }
-            
-            setTimeout(generateStroop, 1000);
-        }
+<!-- ─── GAME 9: COLOR MATCH ─── -->
+<div class="game-panel" id="p9">
+  <div class="card blue">
+    <div class="game-title blue">🎯 COLOR MATCH</div>
+    <div class="game-desc">A colored word appears. Decide if the word's TEXT COLOR and the BACKGROUND COLOR of the box MATCH. Rule changes each level!</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val blue" id="cm-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="cm-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val green" id="cm-streak">0</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="cm-bar" style="width:100%;background:var(--neon-blue)"></div></div>
+    <div id="cm-rule-wrap"><div id="cm-rule-label" class="cm-rule-match">RULE: MATCH?</div></div>
+    <div id="cm-box-label">TEXT COLOR vs BOX COLOR</div>
+    <div id="cm-display-wrap" style="background:var(--surface2);border-radius:10px;margin:8px 0;border:2px solid var(--border);">
+      <div id="cm-display">—</div>
+    </div>
+    <div class="answer-row">
+      <button class="ans-btn" onclick="cmAnswer(true)">✓ YES</button>
+      <button class="ans-btn" onclick="cmAnswer(false)">✗ NO</button>
+    </div>
+    <div class="status" id="cm-status">Press Start to play</div>
+    <button class="btn btn-primary" onclick="startColorMatch()">START</button>
+  </div>
+</div>
 
-        // --- 3. VISUAL SEARCH LOGIC (New Game) ---
-        let visualScore = 0;
-        let targetIndex = -1;
-        const visualArea = document.getElementById('visual-search-area');
-        const visualStatus = document.getElementById('visual-search-status');
+<!-- ─── GAME 10: WORD SORT ─── -->
+<div class="game-panel" id="p10">
+  <div class="card orange">
+    <div class="game-title orange">📚 WORD CATEGORY SORT</div>
+    <div class="game-desc">Sort words into the correct category as quickly as possible. Higher levels add more categories and rarer words.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val orange" id="cs-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="cs-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val green" id="cs-streak">0</span></div>
+    </div>
+    <div id="cs-item"><div class="item-tag">Press Start</div></div>
+    <div class="cs-cats" id="cs-cats"></div>
+    <div class="status" id="cs-status">Categorize each word as fast as you can</div>
+    <button class="btn btn-primary" style="background:var(--neon-orange);color:white;" onclick="startWordSort()">START</button>
+  </div>
+</div>
 
-        function startVisualSearch(reset = true) {
-            if (reset) {
-                visualArea.innerHTML = '';
-                const totalShapes = 30;
-                targetIndex = Math.floor(Math.random() * totalShapes);
+</main>
 
-                for (let i = 0; i < totalShapes; i++) {
-                    const shape = document.createElement('div');
-                    shape.className = 'search-shape';
-                    if (i === targetIndex) {
-                        shape.classList.add('target-shape');
-                    }
-                    shape.onclick = () => checkVisualAnswer(i);
-                    visualArea.appendChild(shape);
-                }
-                visualStatus.textContent = `Score: ${visualScore}`;
-            }
-        }
+<script>
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.game-panel');
+function showGame(i) {
+  tabs.forEach((t,j) => t.classList.toggle('active', i===j));
+  panels.forEach((p,j) => p.classList.toggle('active', i===j));
+}
 
-        function checkVisualAnswer(index) {
-            if (index === targetIndex) {
-                visualScore++;
-                visualStatus.textContent = `✅ Found it! Score: ${visualScore}`;
-                if (visualScore >= 5) {
-                    visualStatus.textContent = `🏆 You won! Final Score: ${visualScore}`;
-                    visualScore = 0;
-                }
-                setTimeout(() => startVisualSearch(true), 500);
-            } else {
-                visualStatus.textContent = `❌ Keep looking! Score: ${visualScore}`;
-                // Optional: flash the incorrect clicked shape
-                const clickedShape = visualArea.children[index];
-                clickedShape.style.backgroundColor = 'black';
-                setTimeout(() => clickedShape.style.backgroundColor = '#e74c3c', 100);
-            }
-        }
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+function rnd(a,b) { return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(arr) { return arr[rnd(0,arr.length-1)]; }
+function setStatus(id, msg, cls='info') {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'status ' + cls;
+}
+function flashStatus(id, msg, cls, delay=1500) {
+  setStatus(id, msg, cls);
+  return delay;
+}
 
+// ══════════════════════════════════════════
+//  GAME 0 — REACTION TIME
+// ══════════════════════════════════════════
+let rtState = 'idle', rtTimer, rtStart, rtStreak = 0, rtBest = Infinity, rtLevel = 1, rtHistory = [];
 
-        // --- 4. MATH GAME LOGIC ---
-        let correctAnswer;
-        
-        function generateMathProblem() {
-            const num1 = Math.floor(Math.random() * 20) + 1;
-            const num2 = Math.floor(Math.random() * 15) + 1;
-            const operators = ['+', '-', '*'];
-            const operator = operators[Math.floor(Math.random() * operators.length)];
-            
-            let problem;
-            if (operator === '-') {
-                 problem = (num1 >= num2) ? `${num1} - ${num2}` : `${num2} - ${num1}`;
-                 correctAnswer = (num1 >= num2) ? num1 - num2 : num2 - num1;
-            } else if (operator === '+') {
-                correctAnswer = num1 + num2;
-                problem = `${num1} + ${num2}`;
-            } else if (operator === '*') {
-                correctAnswer = num1 * num2;
-                problem = `${num1} * ${num2}`;
-            }
-            
-            document.getElementById('math-problem').textContent = problem + ' = ?';
-            document.getElementById('math-result').textContent = '';
-            document.getElementById('math-answer-input').value = '';
-        }
+function handleReact() {
+  const zone = document.getElementById('react-zone');
+  if (rtState === 'idle') {
+    zone.className = 'wait';
+    zone.textContent = 'WAIT FOR GREEN...';
+    rtState = 'waiting';
+    // Possibly add fake flash for level >= 3
+    if (rtLevel >= 3) {
+      const fakeDelay = rnd(800, 1800);
+      setTimeout(() => {
+        if (rtState !== 'waiting') return;
+        zone.className = 'ready';
+        zone.textContent = 'FAKE!';
+        setTimeout(() => {
+          if (rtState !== 'waiting') return;
+          zone.className = 'wait';
+          zone.textContent = 'WAIT FOR GREEN...';
+        }, 150);
+      }, fakeDelay);
+    }
+    const baseMin = Math.max(800, 2200 - rtLevel * 200);
+    const baseMax = Math.max(1500, 4000 - rtLevel * 200);
+    rtTimer = setTimeout(() => {
+      zone.className = 'ready';
+      zone.textContent = '⚡ CLICK NOW! ⚡';
+      rtState = 'go';
+      rtStart = Date.now();
+    }, rnd(baseMin, baseMax));
+  } else if (rtState === 'waiting') {
+    clearTimeout(rtTimer);
+    rtStreak = 0;
+    document.getElementById('rt-streak').textContent = 0;
+    zone.className = 'idle';
+    zone.textContent = 'TAP TO START';
+    rtState = 'idle';
+    setStatus('rt-status', '❌ Too early! Wait for green.', 'err');
+  } else if (rtState === 'go') {
+    const ms = Date.now() - rtStart;
+    rtHistory.push(ms);
+    if (rtHistory.length > 5) rtHistory.shift();
+    rtStreak++;
+    if (ms < rtBest) rtBest = ms;
+    document.getElementById('rt-best').textContent = rtBest + ' ms';
+    document.getElementById('rt-streak').textContent = rtStreak;
+    // Level up
+    if (rtStreak % 5 === 0 && rtLevel < 8) {
+      rtLevel++;
+      document.getElementById('rt-level').textContent = rtLevel;
+      setStatus('rt-status', `⚡ ${ms}ms — Level up! Now level ${rtLevel}`, 'warn');
+    } else {
+      let grade = ms < 200 ? '🏆 ELITE' : ms < 250 ? '🥇 GREAT' : ms < 320 ? '✅ GOOD' : ms < 400 ? '👍 OK' : '🐢 SLOW';
+      setStatus('rt-status', `${ms} ms — ${grade}`, ms < 300 ? 'ok' : 'info');
+    }
+    const avg = Math.round(rtHistory.reduce((a,b)=>a+b,0)/rtHistory.length);
+    document.getElementById('rt-history').textContent = `Avg last ${rtHistory.length}: ${avg}ms`;
+    rtState = 'idle';
+    zone.className = 'idle';
+    zone.textContent = 'TAP TO START';
+  }
+}
 
-        function checkMathAnswer() {
-            const userAnswer = parseInt(document.getElementById('math-answer-input').value);
-            const resultDiv = document.getElementById('math-result');
-            
-            if (isNaN(userAnswer)) {
-                resultDiv.textContent = "Please enter a number.";
-                resultDiv.style.color = 'orange';
-                return;
-            }
-            
-            if (userAnswer === correctAnswer) {
-                resultDiv.textContent = "🎉 Correct!";
-                resultDiv.style.color = '#27ae60';
-                generateMathProblem();
-            } else {
-                resultDiv.textContent = `❌ Incorrect.`;
-                resultDiv.style.color = '#c0392b';
-            }
-        }
+// ══════════════════════════════════════════
+//  GAME 1 — STROOP
+// ══════════════════════════════════════════
+const STROOP_PALETTES = [
+  ['Red','Blue','Green','Yellow'],
+  ['Red','Blue','Green','Yellow','Purple','Orange'],
+  ['Red','Blue','Green','Yellow','Purple','Orange','Cyan','Pink'],
+];
+const STROOP_CSS = {Red:'#ff2d78',Blue:'#00d4ff',Green:'#00ff9f',Yellow:'#ffe600',Purple:'#bf5fff',Orange:'#ff6b00',Cyan:'#00ffff',Pink:'#ff80b0'};
+let stLevel=1, stScore=0, stStreak=0, stCorrectColor='', stRunning=false, stBarAnim, stBarTimeout;
 
+function startStroop() {
+  stRunning = true;
+  document.getElementById('st-level').textContent = stLevel;
+  generateStroop();
+}
+function generateStroop() {
+  if (!stRunning) return;
+  const palette = STROOP_PALETTES[Math.min(stLevel-1, STROOP_PALETTES.length-1)];
+  const word = pick(palette);
+  const color = pick(palette);
+  stCorrectColor = color;
+  const el = document.getElementById('stroop-word');
+  el.textContent = word;
+  el.style.color = STROOP_CSS[color];
+  // Build buttons
+  const btnsEl = document.getElementById('stroop-btns');
+  btnsEl.innerHTML = '';
+  const shuffled = [...palette].sort(()=>Math.random()-0.5);
+  shuffled.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'ans-btn';
+    b.textContent = c;
+    b.style.borderColor = STROOP_CSS[c];
+    b.style.color = STROOP_CSS[c];
+    b.onclick = () => checkStroop(c, b);
+    btnsEl.appendChild(b);
+  });
+  // Timer bar
+  clearTimeout(stBarTimeout);
+  cancelAnimationFrame(stBarAnim);
+  const bar = document.getElementById('stroop-bar');
+  const timeLimit = Math.max(1200, 3000 - stLevel * 300);
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  bar.offsetHeight;
+  bar.style.transition = `width ${timeLimit}ms linear`;
+  bar.style.width = '0%';
+  stBarTimeout = setTimeout(() => {
+    if (!stRunning) return;
+    stStreak = 0;
+    document.getElementById('st-streak').textContent = 0;
+    setStatus('st-status', '⏱ TIME OUT!', 'err');
+    setTimeout(generateStroop, 600);
+  }, timeLimit);
+}
+function checkStroop(chosen, btn) {
+  if (!stRunning) return;
+  clearTimeout(stBarTimeout);
+  const isCorrect = chosen === stCorrectColor;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) {
+    stScore++; stStreak++;
+    document.getElementById('st-score').textContent = stScore;
+    document.getElementById('st-streak').textContent = stStreak;
+    if (stStreak % 8 === 0 && stLevel < 3) {
+      stLevel++;
+      document.getElementById('st-level').textContent = stLevel;
+      setStatus('st-status', `🎉 Level Up → Level ${stLevel}!`, 'warn');
+    } else {
+      setStatus('st-status', '✓ Correct!', 'ok');
+    }
+  } else {
+    stStreak = 0;
+    document.getElementById('st-streak').textContent = 0;
+    setStatus('st-status', `✗ Wrong — the color was ${stCorrectColor}`, 'err');
+  }
+  setTimeout(generateStroop, 700);
+}
 
-        // --- 5. SEQUENCE MEMORY LOGIC ---
-        let sequence = [];
-        let playerSequence = [];
-        let level = 1;
-        let isFlashing = false;
-        const memorySquares = document.querySelectorAll('.mem-square');
-        const memoryLevelDisplay = document.getElementById('memory-level');
-        const memoryStatusDisplay = document.getElementById('memory-status');
+// ══════════════════════════════════════════
+//  GAME 2 — VISUAL SEARCH
+// ══════════════════════════════════════════
+let vsLevel=1, vsScore=0, vsTargetScore=5, vsTargets=[];
 
-        function startMemoryGame() {
-            if (isFlashing) return;
-            memoryStatusDisplay.textContent = '';
-            playerSequence = [];
-            
-            const newSquareIndex = Math.floor(Math.random() * memorySquares.length);
-            sequence.push(newSquareIndex);
-            
-            memoryLevelDisplay.textContent = `Level: ${level}`;
-            flashSequence();
-        }
+function startVisSearch() {
+  document.getElementById('vs-level').textContent = vsLevel;
+  document.getElementById('vs-target').textContent = vsTargetScore;
+  const grid = document.getElementById('vs-grid');
+  grid.innerHTML = '';
+  vsTargets = [];
+  const totalDots = 20 + vsLevel * 8;
+  const numTargets = vsLevel <= 2 ? 1 : Math.min(3, Math.floor(vsLevel/2));
+  const targetIndices = new Set();
+  while (targetIndices.size < numTargets) targetIndices.add(rnd(0, totalDots-1));
+  // Color scheme: distractor color, target color
+  const schemes = [
+    {dist:'#ff2d78', target:'#00d4ff'},
+    {dist:'#00ff9f', target:'#ffe600'},
+    {dist:'#bf5fff', target:'#ff6b00'},
+  ];
+  const scheme = pick(schemes);
+  for (let i = 0; i < totalDots; i++) {
+    const d = document.createElement('div');
+    d.className = 'vs-dot';
+    const isTarget = targetIndices.has(i);
+    if (isTarget) vsTargets.push(i);
+    d.style.background = isTarget ? scheme.target : scheme.dist;
+    if (vsLevel >= 4) {
+      // Add noise: slight size variation to distractors
+      if (!isTarget) { const s = rnd(24,32); d.style.width=d.style.height=s+'px'; }
+    }
+    d.onclick = () => vsClick(i, d);
+    grid.appendChild(d);
+  }
+  setStatus('vs-status', `Find ${numTargets > 1 ? 'all ' + numTargets + ' targets' : 'the target'}!`, 'info');
+}
+function vsClick(i, el) {
+  if (vsTargets.includes(i)) {
+    vsTargets.splice(vsTargets.indexOf(i), 1);
+    el.style.background = '#00ff9f';
+    el.style.transform = 'scale(1.4)';
+    el.onclick = null;
+    if (vsTargets.length === 0) {
+      vsScore++;
+      document.getElementById('vs-score').textContent = vsScore;
+      if (vsScore >= vsTargetScore) {
+        vsLevel++; vsScore = 0; vsTargetScore = 5 + vsLevel;
+        document.getElementById('vs-level').textContent = vsLevel;
+        document.getElementById('vs-target').textContent = vsTargetScore;
+        setStatus('vs-status', `🎉 Level up! → Level ${vsLevel}`, 'warn');
+      } else {
+        setStatus('vs-status', `✓ Found! Score: ${vsScore}/${vsTargetScore}`, 'ok');
+      }
+      setTimeout(startVisSearch, 600);
+    } else {
+      setStatus('vs-status', `✓ Keep going! ${vsTargets.length} left`, 'ok');
+    }
+  } else {
+    el.style.background = '#ff2d78';
+    el.style.transform = 'scale(0.8)';
+    setTimeout(() => { el.style.background = el.dataset.origColor || '#ff2d78'; el.style.transform=''; }, 200);
+    setStatus('vs-status', '✗ Wrong dot!', 'err');
+  }
+}
 
-        function flashSequence() {
-            isFlashing = true;
-            let i = 0;
-            const flashInterval = setInterval(() => {
-                const square = memorySquares[sequence[i]];
-                square.classList.add('mem-flash');
-                setTimeout(() => {
-                    square.classList.remove('mem-flash');
-                }, 300);
+// ══════════════════════════════════════════
+//  GAME 3 — QUICK MATH
+// ══════════════════════════════════════════
+let mLevel=1, mScore=0, mStreak=0, mAnswer, mRunning=false, mBarAnim, mBarTimeout;
 
-                i++;
-                if (i >= sequence.length) {
-                    clearInterval(flashInterval);
-                    isFlashing = false;
-                    memoryStatusDisplay.textContent = 'Now repeat the sequence!';
-                }
-            }, 700);
-        }
+function startMath() {
+  mRunning = true;
+  newMathProblem();
+}
+function newMathProblem() {
+  if (!mRunning) return;
+  clearTimeout(mBarTimeout);
+  const a = rnd(1, 10 + mLevel*8);
+  const b = rnd(1, 10 + mLevel*5);
+  const ops = mLevel <= 2 ? ['+','-'] : mLevel <= 4 ? ['+','-','*'] : ['+','-','*','/'];
+  const op = pick(ops);
+  let eq, ans;
+  if (op === '+') { ans = a+b; eq = `${a} + ${b}`; }
+  else if (op === '-') { ans = Math.abs(a-b); eq = a>=b ? `${a} − ${b}` : `${b} − ${a}`; }
+  else if (op === '*') { const x=rnd(1,5+mLevel),y=rnd(1,5+mLevel); ans=x*y; eq=`${x} × ${y}`; }
+  else { const x=rnd(1,9); const y=rnd(1,5); ans=x*y; eq=`${ans} ÷ ${x} =?`; mAnswer=y; document.getElementById('math-eq').textContent=eq; document.getElementById('math-input').value=''; document.getElementById('math-input').focus(); // Chains
+    if (mLevel >= 6) { const c=rnd(1,5); ans=y+c; eq=`( ${x*y} ÷ ${x} ) + ${c}`; }
+    mAnswer = ans; setStatus('m-status','','info');
+    startMBar(); return; }
+  if (mLevel >= 5) { const c=rnd(1,10+mLevel*3); const op2=pick(['+','-']); const extra=op2==='+' ? ans+c : ans-c; eq=`${eq} ${op2==='+'?'+':'−'} ${c}`; ans=extra; }
+  mAnswer = ans;
+  document.getElementById('math-eq').textContent = eq + ' = ?';
+  document.getElementById('math-input').value = '';
+  document.getElementById('math-input').focus();
+  setStatus('m-status', '', 'info');
+  startMBar();
+}
+function startMBar() {
+  const bar = document.getElementById('m-bar');
+  const t = Math.max(3000, 10000 - mLevel*800);
+  bar.style.transition = 'none'; bar.style.width='100%'; bar.offsetHeight;
+  bar.style.transition = `width ${t}ms linear`; bar.style.width='0%';
+  mBarTimeout = setTimeout(() => {
+    if (!mRunning) return;
+    mStreak = 0; document.getElementById('m-streak').textContent=0;
+    setStatus('m-status', `⏱ Time! Answer was ${mAnswer}`, 'err');
+    setTimeout(newMathProblem, 1000);
+  }, t);
+}
+function checkMath() {
+  if (!mRunning) return;
+  const val = parseInt(document.getElementById('math-input').value);
+  if (isNaN(val)) return;
+  clearTimeout(mBarTimeout);
+  if (val === mAnswer) {
+    mScore++; mStreak++;
+    document.getElementById('m-score').textContent = mScore;
+    document.getElementById('m-streak').textContent = mStreak;
+    if (mStreak % 5 === 0 && mLevel < 8) {
+      mLevel++; document.getElementById('m-level').textContent = mLevel;
+      setStatus('m-status', `🎉 Level up → ${mLevel}!`, 'warn');
+    } else {
+      setStatus('m-status', '✓ Correct!', 'ok');
+    }
+    setTimeout(newMathProblem, 500);
+  } else {
+    mStreak = 0; document.getElementById('m-streak').textContent=0;
+    setStatus('m-status', `✗ Wrong. Answer: ${mAnswer}`, 'err');
+    setTimeout(newMathProblem, 1200);
+  }
+}
 
-        function checkMemorySequence(index) {
-            if (isFlashing) return;
+// ══════════════════════════════════════════
+//  GAME 4 — SEQUENCE MEMORY
+// ══════════════════════════════════════════
+const SEQ_COLORS = ['var(--neon-pink)','var(--neon-blue)','var(--neon-green)','var(--neon-yellow)','var(--neon-purple)','var(--neon-orange)'];
+let seqLevel=1, seqBest=0, seqSeq=[], seqPlayer=[], seqFlashing=false;
 
-            playerSequence.push(index);
-            const currentStep = playerSequence.length - 1;
-            const clickedSquare = memorySquares[index];
+function startSequence() {
+  if (seqFlashing) return;
+  seqPlayer = [];
+  setInactiveSeq(true);
+  seqSeq.push(rnd(0, 5));
+  document.getElementById('seq-level').textContent = seqLevel;
+  setStatus('seq-status', '👁 Watch carefully...', 'info');
+  setTimeout(() => flashSeq(), 600);
+}
+function setInactiveSeq(on) {
+  document.querySelectorAll('.seq-tile').forEach(t => t.classList.toggle('inactive', on));
+}
+function flashSeq() {
+  seqFlashing = true;
+  const speed = Math.max(300, 700 - seqLevel * 40);
+  let i = 0;
+  const iv = setInterval(() => {
+    if (i > 0) document.querySelectorAll('.seq-tile')[seqSeq[i-1]].classList.remove('lit');
+    if (i >= seqSeq.length) {
+      clearInterval(iv);
+      seqFlashing = false;
+      setInactiveSeq(false);
+      setStatus('seq-status', '🖱 Repeat the sequence!', 'warn');
+      return;
+    }
+    const tile = document.querySelectorAll('.seq-tile')[seqSeq[i]];
+    tile.classList.add('lit');
+    i++;
+  }, speed);
+}
+function seqClick(i) {
+  if (seqFlashing) return;
+  const step = seqPlayer.length;
+  seqPlayer.push(i);
+  const tile = document.querySelectorAll('.seq-tile')[i];
+  tile.classList.add('lit');
+  setTimeout(() => tile.classList.remove('lit'), 250);
+  if (seqPlayer[step] !== seqSeq[step]) {
+    setStatus('seq-status', `❌ Wrong! Reached level ${seqLevel}. Starting over.`, 'err');
+    if (seqLevel > seqBest) { seqBest = seqLevel; document.getElementById('seq-best').textContent = seqBest; }
+    seqSeq = []; seqLevel = 1;
+    setInactiveSeq(true);
+    document.getElementById('seq-level').textContent = 1;
+    return;
+  }
+  if (seqPlayer.length === seqSeq.length) {
+    seqLevel++;
+    document.getElementById('seq-level').textContent = seqLevel;
+    setStatus('seq-status', '✅ Correct! Next level loading...', 'ok');
+    setInactiveSeq(true);
+    setTimeout(startSequence, 1200);
+  }
+}
 
-            if (playerSequence[currentStep] !== sequence[currentStep]) {
-                clickedSquare.style.backgroundColor = '#e74c3c'; // Error color
-                memoryStatusDisplay.textContent = `❌ Game Over! Reached Level ${level}. Click Start to try again.`;
-                sequence = [];
-                level = 1;
-            } else if (playerSequence.length === sequence.length) {
-                memoryStatusDisplay.textContent = `✅ Success! Advancing to the next level.`;
-                level++;
-                setTimeout(startMemoryGame, 1500);
-            }
-            // Reset color briefly
-            clickedSquare.style.backgroundColor = '#3498db';
-            setTimeout(() => clickedSquare.style.backgroundColor = '', 100);
-        }
-        
-        // --- 6. CHIMP TEST LOGIC (New Game) ---
-        let chimpNumbers = [];
-        let chimpCurrentNumber = 1;
-        const chimpGrid = document.getElementById('chimp-grid');
-        const chimpResult = document.getElementById('chimp-result');
+// ══════════════════════════════════════════
+//  GAME 5 — CHIMP TEST
+// ══════════════════════════════════════════
+let chLevel=1, chLives=3, chNums=[], chNext=1, chHidden=false;
 
-        function startChimpGame() {
-            chimpGrid.innerHTML = '';
-            chimpNumbers = [];
-            chimpCurrentNumber = 1;
-            chimpResult.textContent = 'Click 1...';
-            
-            const numCount = 4; // Start with 4 numbers
-            let occupiedPositions = new Set();
-            
-            while (occupiedPositions.size < numCount) {
-                occupiedPositions.add(Math.floor(Math.random() * 25)); // Grid is 5x5 = 25 cells
-            }
+function startChimp() {
+  chHidden = false;
+  chNext = 1;
+  chNums = [];
+  const grid = document.getElementById('chimp-grid');
+  grid.innerHTML = '';
+  const count = 3 + chLevel;
+  document.getElementById('ch-count').textContent = count;
+  document.getElementById('ch-lives').textContent = chLives;
+  const positions = new Set();
+  while (positions.size < count) positions.add(rnd(0,24));
+  let numIdx = 1;
+  for (let i = 0; i < 25; i++) {
+    const c = document.createElement('div');
+    c.className = 'chimp-cell';
+    if (positions.has(i)) {
+      const n = numIdx++;
+      chNums.push({ n, pos: i });
+      c.textContent = n;
+      c.classList.add('active');
+      c.dataset.n = n;
+      c.onclick = () => chimpClick(n, c);
+    }
+    grid.appendChild(c);
+  }
+  // Hide after delay
+  const hideDelay = Math.max(500, 1800 - chLevel*100);
+  setStatus('ch-status', `Memorize the positions! Hiding in ${(hideDelay/1000).toFixed(1)}s`, 'warn');
+  setTimeout(() => {
+    chHidden = true;
+    document.querySelectorAll('.chimp-cell.active').forEach(c => { c.textContent=''; c.style.background='var(--surface2)'; });
+    setStatus('ch-status', `Click: 1 → ${count} in order`, 'info');
+  }, hideDelay);
+}
+function chimpClick(n, cell) {
+  if (!chHidden) return;
+  if (n === chNext) {
+    cell.classList.remove('active');
+    cell.classList.add('done');
+    cell.textContent = n;
+    chNext++;
+    if (chNext > chNums.length) {
+      chLevel++;
+      document.getElementById('ch-level').textContent = chLevel;
+      setStatus('ch-status', `🎉 Level ${chLevel-1} cleared! Loading level ${chLevel}...`, 'ok');
+      setTimeout(startChimp, 1200);
+    }
+  } else {
+    chLives--;
+    document.getElementById('ch-lives').textContent = chLives;
+    cell.classList.add('wrong');
+    // Show correct positions
+    document.querySelectorAll('.chimp-cell').forEach(c => c.onclick = null);
+    chNums.forEach(({n:num, pos}) => {
+      const c = document.getElementById('chimp-grid').children[pos];
+      c.textContent = num;
+      c.style.background = num === chNext ? 'var(--neon-pink)' : 'var(--surface2)';
+      c.style.color = 'var(--text)';
+    });
+    if (chLives <= 0) {
+      setStatus('ch-status', `💀 Game Over! Reached level ${chLevel}. Press Start to retry.`, 'err');
+      chLevel = 1; chLives = 3;
+      document.getElementById('ch-level').textContent = 1;
+    } else {
+      setStatus('ch-status', `✗ Wrong! Lives left: ${chLives}. Restarting level...`, 'err');
+      setTimeout(startChimp, 1500);
+    }
+  }
+}
 
-            for (let i = 0; i < 25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'chimp-cell';
-                
-                if (occupiedPositions.has(i)) {
-                    const number = chimpNumbers.length + 1;
-                    chimpNumbers.push({ index: i, number: number });
-                    cell.textContent = number;
-                    cell.classList.add('chimp-number');
-                    cell.onclick = () => checkChimpAnswer(number, cell);
-                } else {
-                    cell.textContent = '';
-                }
-                chimpGrid.appendChild(cell);
-            }
+// ══════════════════════════════════════════
+//  GAME 6 — ODD ONE OUT
+// ══════════════════════════════════════════
+let oddLevel=1, oddScore=0, oddTarget=5, oddIdx=-1;
 
-            // Hide numbers after a short delay
-            setTimeout(() => {
-                chimpNumbers.forEach(item => {
-                    chimpGrid.children[item.index].textContent = '';
-                });
-            }, 1000);
-        }
+function startOdd() {
+  document.getElementById('odd-level').textContent = oddLevel;
+  document.getElementById('odd-target').textContent = oddTarget;
+  const grid = document.getElementById('odd-grid');
+  grid.innerHTML = '';
+  const count = 4 + oddLevel * 2;
+  oddIdx = rnd(0, count-1);
+  // Base color and odd color
+  const palettes = ['#ff2d78','#00d4ff','#00ff9f','#ffe600','#bf5fff','#ff6b00'];
+  const base = pick(palettes);
+  const others = palettes.filter(p=>p!==base);
+  const oddColor = pick(others);
+  // Shapes: 0=circle, 1=square, 2=diamond, 3=triangle
+  const baseShape = rnd(0,3);
+  const oddShape = (baseShape + 1 + rnd(0,2)) % 4;
+  // Determine difference type based on level
+  const diffType = oddLevel <= 2 ? 'color' : oddLevel <= 4 ? (Math.random()<0.5?'color':'shape') : 'both';
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'odd-item';
+    const isOdd = i === oddIdx;
+    const color = isOdd && (diffType==='color'||diffType==='both') ? oddColor : base;
+    const shape = isOdd && (diffType==='shape'||diffType==='both') ? oddShape : baseShape;
+    el.innerHTML = makeSVGShape(shape, color, 52);
+    el.onclick = () => oddClick(i);
+    grid.appendChild(el);
+  }
+  setStatus('odd-status', `Level ${oddLevel} — find the different one`, 'info');
+}
+function makeSVGShape(type, color, size) {
+  const s = size, h = s/2;
+  const glow = color;
+  let path;
+  if (type===0) path = `<circle cx="${h}" cy="${h}" r="${h-3}" fill="${color}" filter="url(#glow)"/>`;
+  else if (type===1) path = `<rect x="3" y="3" width="${s-6}" height="${s-6}" rx="4" fill="${color}" filter="url(#glow)"/>`;
+  else if (type===2) path = `<polygon points="${h},3 ${s-3},${h} ${h},${s-3} 3,${h}" fill="${color}" filter="url(#glow)"/>`;
+  else path = `<polygon points="${h},3 ${s-3},${s-3} 3,${s-3}" fill="${color}" filter="url(#glow)"/>`;
+  return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">
+    <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="cb"/><feComposite in="SourceGraphic" in2="cb" operator="over"/></filter></defs>
+    ${path}</svg>`;
+}
+function oddClick(i) {
+  if (i === oddIdx) {
+    oddScore++;
+    document.getElementById('odd-score').textContent = oddScore;
+    if (oddScore >= oddTarget) {
+      oddLevel++; oddScore=0; oddTarget = 5+oddLevel;
+      setStatus('odd-status', `🎉 Level up → ${oddLevel}!`, 'warn');
+      setTimeout(startOdd, 700);
+    } else {
+      setStatus('odd-status', `✓ Correct! ${oddScore}/${oddTarget}`, 'ok');
+      setTimeout(startOdd, 400);
+    }
+  } else {
+    setStatus('odd-status', '✗ Wrong — try again!', 'err');
+    // Briefly highlight wrong choice
+    document.getElementById('odd-grid').children[i].style.opacity = '0.3';
+    setTimeout(() => { document.getElementById('odd-grid').children[i].style.opacity = '1'; }, 500);
+  }
+}
 
-        function checkChimpAnswer(clickedNumber, cell) {
-            if (clickedNumber === chimpCurrentNumber) {
-                chimpResult.textContent = `Click ${chimpCurrentNumber + 1}...`;
-                cell.style.backgroundColor = '#27ae60'; // Success color
-                cell.onclick = null; // Disable future clicks
-                chimpCurrentNumber++;
+// ══════════════════════════════════════════
+//  GAME 7 — N-BACK
+// ══════════════════════════════════════════
+let nbN=1, nbSeq=[], nbCurrent=-1, nbRunning=false, nbTimer, nbScore=0, nbHits=0, nbErrors=0;
+let nbAnswered = false;
 
-                if (chimpCurrentNumber > chimpNumbers.length) {
-                    chimpResult.textContent = '🎉 Level Complete! Try increasing the number count!';
-                }
-            } else {
-                chimpResult.textContent = '❌ Incorrect! Start again.';
-                // Show all numbers for feedback
-                chimpNumbers.forEach(item => {
-                    chimpGrid.children[item.index].textContent = item.number;
-                });
-                // Reset state
-                chimpCurrentNumber = 1;
-                chimpNumbers = [];
-            }
-        }
+function startNBack() {
+  nbN = 1; nbSeq=[]; nbScore=0; nbHits=0; nbErrors=0;
+  document.getElementById('nb-n').textContent = nbN;
+  document.getElementById('nb-score').textContent=0;
+  document.getElementById('nb-hits').textContent=0;
+  document.getElementById('nb-errors').textContent=0;
+  nbRunning = true;
+  setStatus('nb-status', `N=${nbN}: Is current position same as ${nbN} step(s) ago?`, 'info');
+  nbTick();
+}
+function stopNBack() {
+  nbRunning = false; clearTimeout(nbTimer);
+  ['nb-match-btn','nb-nomatch-btn'].forEach(id => document.getElementById(id).disabled=true);
+  setStatus('nb-status', `Stopped. Score: ${nbScore}`, 'info');
+}
+function nbTick() {
+  if (!nbRunning) return;
+  // Clear previous highlight
+  document.querySelectorAll('.nback-cell').forEach(c=>c.classList.remove('lit'));
+  // Check if previous answer was needed but not given
+  if (nbSeq.length > nbN && !nbAnswered) {
+    const wasMatch = nbSeq[nbSeq.length-1-nbN] === nbSeq[nbSeq.length-2];
+    if (wasMatch) { nbErrors++; document.getElementById('nb-errors').textContent=nbErrors; }
+  }
+  nbAnswered = false;
+  nbCurrent = rnd(0,8);
+  nbSeq.push(nbCurrent);
+  document.getElementById('nb' + nbCurrent).classList.add('lit');
+  const canAnswer = nbSeq.length > nbN;
+  document.getElementById('nb-match-btn').disabled = !canAnswer;
+  document.getElementById('nb-nomatch-btn').disabled = !canAnswer;
+  const speed = Math.max(1200, 2500 - nbN*200);
+  nbTimer = setTimeout(() => {
+    document.getElementById('nb'+nbCurrent).classList.remove('lit');
+    nbTimer = setTimeout(nbTick, 400);
+  }, speed);
+  // Level up N after 20 correct
+  if (nbScore > 0 && nbScore % 15 === 0 && nbSeq.length % 15 === 0) {
+    nbN = Math.min(nbN+1, 5);
+    document.getElementById('nb-n').textContent = nbN;
+    setStatus('nb-status', `⬆️ N increased to ${nbN}!`, 'warn');
+  }
+}
+function nbAnswer(isMatch) {
+  if (!nbRunning || nbSeq.length <= nbN) return;
+  nbAnswered = true;
+  const actualMatch = nbSeq[nbSeq.length-1] === nbSeq[nbSeq.length-1-nbN];
+  const correct = isMatch === actualMatch;
+  const mb = document.getElementById('nb-match-btn');
+  const nb = document.getElementById('nb-nomatch-btn');
+  const pressedBtn = isMatch ? mb : nb;
+  pressedBtn.classList.add('pressed');
+  setTimeout(() => pressedBtn.classList.remove('pressed'), 300);
+  if (correct) {
+    nbScore++;
+    if (isMatch) nbHits++;
+    document.getElementById('nb-score').textContent = nbScore;
+    document.getElementById('nb-hits').textContent = nbHits;
+    setStatus('nb-status', '✓ Correct!', 'ok');
+  } else {
+    nbErrors++;
+    document.getElementById('nb-errors').textContent = nbErrors;
+    setStatus('nb-status', `✗ Wrong — it was ${actualMatch?'MATCH':'NO MATCH'}`, 'err');
+  }
+}
 
-        // --- 7. ODD ONE OUT LOGIC (New Game) ---
-        let oddScore = 0;
-        let oddOneOutIndex = -1;
-        const oddArea = document.getElementById('odd-one-out-area');
-        const oddStatus = document.getElementById('odd-one-out-status');
-        
-        function generateOddOneOut(reset = true) {
-            if (reset) {
-                oddArea.innerHTML = '';
-                const totalShapes = 5; 
-                oddOneOutIndex = Math.floor(Math.random() * totalShapes);
-                
-                // Determine the "odd" factor: 0=color, 1=shape (e.g., square vs circle)
-                const oddFactor = Math.random() < 0.5 ? 0 : 1; 
+// ══════════════════════════════════════════
+//  GAME 8 — SPEED TYPING
+// ══════════════════════════════════════════
+const TYPING_SETS = [
+  ["the quick brown fox","pack my box with five dozen liquor jugs","how vexingly quick daft zebras jump","bright vixens jump dozy fowl quack"],
+  ["sphinx of black quartz judge my vow","two driven jocks help fax my big quiz","five boxing wizards jump quickly","the five boxing wizards jump quickly at dawn"],
+  ["beyond the hazy blue mountains lie forgotten kingdoms full of mystery","a journey of a thousand miles begins with a single step forward","we hold these truths to be self-evident that all minds are created equal"],
+  ["pack my box: 12 jugs of liquid wax! 5 more dozen?","42 foxes jumped over 17 lazy dogs at exactly 3:00 AM","In 2025, AI systems processed 98.7% of tasks with remarkable speed"],
+];
+let tpLevel=1, tpBest=0, tpTarget='', tpTyped=0, tpStart=null, tpErrors=0, tpRunning=false;
 
-                for (let i = 0; i < totalShapes; i++) {
-                    const shape = document.createElement('div');
-                    shape.className = 'odd-shape';
+function startTyping() {
+  tpLevel = 1; tpErrors=0;
+  document.getElementById('tp-level').textContent = tpLevel;
+  loadTypingPrompt();
+}
+function loadTypingPrompt() {
+  const pool = TYPING_SETS[Math.min(tpLevel-1, TYPING_SETS.length-1)];
+  tpTarget = pick(pool);
+  tpTyped = 0; tpStart = null; tpErrors = 0; tpRunning = true;
+  renderTyping();
+  const inp = document.getElementById('typing-input');
+  inp.value = ''; inp.disabled = false; inp.focus();
+  setStatus('tp-status', 'Type the text above — timer starts on first keystroke', 'info');
+  document.getElementById('tp-bar').style.width = '0%';
+  document.getElementById('tp-wpm').textContent = '—';
+  document.getElementById('tp-acc').textContent = '—';
+}
+function renderTyping() {
+  const el = document.getElementById('typing-target');
+  el.innerHTML = tpTarget.split('').map((ch, i) => {
+    const typed = document.getElementById('typing-input').value;
+    let cls = 'char-pending';
+    if (i < typed.length) cls = typed[i] === ch ? 'char-done' : 'char-wrong';
+    const cursor = i === typed.length ? ' char-cursor' : '';
+    return `<span class="${cls}${cursor}">${ch==' '?'&nbsp;':ch}</span>`;
+  }).join('');
+}
+function handleTyping() {
+  if (!tpRunning) return;
+  const inp = document.getElementById('typing-input');
+  const val = inp.value;
+  if (!tpStart) tpStart = Date.now();
+  renderTyping();
+  // Count errors
+  tpErrors = 0;
+  for (let i=0; i<Math.min(val.length,tpTarget.length); i++) {
+    if (val[i] !== tpTarget[i]) tpErrors++;
+  }
+  const progress = Math.min(val.length / tpTarget.length * 100, 100);
+  document.getElementById('tp-bar').style.width = progress + '%';
+  // WPM
+  const elapsed = (Date.now() - tpStart) / 60000;
+  const wpm = elapsed > 0 ? Math.round((val.length/5) / elapsed) : 0;
+  document.getElementById('tp-wpm').textContent = wpm;
+  const acc = val.length > 0 ? Math.round((1 - tpErrors/val.length)*100) : 100;
+  document.getElementById('tp-acc').textContent = acc + '%';
+  // Completion
+  if (val === tpTarget) {
+    tpRunning = false;
+    inp.disabled = true;
+    if (wpm > tpBest) { tpBest = wpm; document.getElementById('tp-best').textContent = wpm; }
+    if (tpLevel < 4 && wpm >= 30 + tpLevel*10) {
+      tpLevel++;
+      document.getElementById('tp-level').textContent = tpLevel;
+      setStatus('tp-status', `🎉 Level up → ${tpLevel}! WPM: ${wpm}, Acc: ${acc}%`, 'warn');
+    } else {
+      setStatus('tp-status', `✅ Done! WPM: ${wpm} | Acc: ${acc}%`, 'ok');
+    }
+    setTimeout(loadTypingPrompt, 2000);
+  }
+}
 
-                    if (i === oddOneOutIndex) {
-                        shape.classList.add('is-odd'); 
-                        if (oddFactor === 1) { // Odd by shape (make it a circle instead of square)
-                           shape.style.borderRadius = '50%';
-                        } else { // Odd by color (already set by is-odd class)
-                           shape.style.borderRadius = '5px';
-                        }
-                    } else {
-                        // Standard shapes
-                        shape.style.borderRadius = '5px'; // Square/Rectangle
-                    }
-                    shape.onclick = () => checkOddOneOut(i);
-                    oddArea.appendChild(shape);
-                }
-                oddStatus.textContent = `Score: ${oddScore}`;
-            }
-        }
+// ══════════════════════════════════════════
+//  GAME 9 — COLOR MATCH
+// ══════════════════════════════════════════
+const CM_COLORS = {
+  'RED': '#ff2d78','BLUE': '#00d4ff','GREEN':'#00ff9f',
+  'YELLOW':'#ffe600','PURPLE':'#bf5fff','ORANGE':'#ff6b00'
+};
+const CM_COLOR_NAMES = Object.keys(CM_COLORS);
+let cmLevel=1, cmScore=0, cmStreak=0, cmCorrect, cmRunning=false, cmBarT, cmRule;
+const CM_RULES = ['WORD=BOX?', 'WORD=BOX?', 'WORD≠BOX?', 'RANDOM'];
 
-        function checkOddOneOut(index) {
-            if (index === oddOneOutIndex) {
-                oddScore++;
-                oddStatus.textContent = `✅ Correct! Score: ${oddScore}`;
-                if (oddScore >= 3) {
-                    oddStatus.textContent = `🏆 You Won the round! Final Score: ${oddScore}`;
-                    oddScore = 0;
-                }
-                setTimeout(() => generateOddOneOut(true), 500);
-            } else {
-                oddStatus.textContent = `❌ Incorrect. Try again! Score: ${oddScore}`;
-            }
-        }
+function startColorMatch() {
+  cmRunning=true; cmScore=0; cmStreak=0;
+  document.getElementById('cm-level').textContent = cmLevel;
+  generateColorMatch();
+}
+function generateColorMatch() {
+  if (!cmRunning) return;
+  clearTimeout(cmBarT);
+  cmRule = CM_RULES[Math.min(cmLevel-1, CM_RULES.length-1)];
+  const word = pick(CM_COLOR_NAMES);
+  const textColor = CM_COLORS[word];
+  const boxColorName = cmLevel<=1 ? word : pick(CM_COLOR_NAMES);
+  const boxColor = CM_COLORS[boxColorName];
+  // Determine correct answer based on rule
+  if (cmRule === 'WORD=BOX?') {
+    cmCorrect = word === boxColorName;
+    document.getElementById('cm-rule-label').textContent = '⚖ RULE: Does TEXT color = BOX color?';
+    document.getElementById('cm-rule-label').className = 'cm-rule-match';
+  } else if (cmRule === 'WORD≠BOX?') {
+    cmCorrect = word !== boxColorName;
+    document.getElementById('cm-rule-label').textContent = '⚖ RULE: Does TEXT color ≠ BOX color?';
+    document.getElementById('cm-rule-label').className = 'cm-rule-color';
+  } else {
+    // Random rule per round
+    const flip = Math.random()<0.5;
+    cmCorrect = flip ? word===boxColorName : word!==boxColorName;
+    document.getElementById('cm-rule-label').textContent = flip ? '⚖ RULE: SAME color?' : '⚖ RULE: DIFFERENT color?';
+    document.getElementById('cm-rule-label').className = 'cm-rule-both';
+  }
+  const el = document.getElementById('cm-display');
+  el.textContent = word;
+  el.style.color = textColor;
+  const wrap = document.getElementById('cm-display-wrap');
+  wrap.style.background = boxColor + '22';
+  wrap.style.borderColor = boxColor;
+  setStatus('cm-status', '', 'info');
+  // Timer
+  const t = Math.max(1500, 4000 - cmLevel*300);
+  const bar = document.getElementById('cm-bar');
+  bar.style.transition='none'; bar.style.width='100%'; bar.offsetHeight;
+  bar.style.transition=`width ${t}ms linear`; bar.style.width='0%';
+  cmBarT = setTimeout(() => {
+    cmStreak=0; document.getElementById('cm-streak').textContent=0;
+    setStatus('cm-status','⏱ Too slow!','err');
+    setTimeout(generateColorMatch, 600);
+  }, t);
+}
+function cmAnswer(yes) {
+  if (!cmRunning) return;
+  clearTimeout(cmBarT);
+  const isCorrect = yes === cmCorrect;
+  if (isCorrect) {
+    cmScore++; cmStreak++;
+    document.getElementById('cm-score').textContent = cmScore;
+    document.getElementById('cm-streak').textContent = cmStreak;
+    if (cmStreak % 8===0 && cmLevel<4) {
+      cmLevel++; document.getElementById('cm-level').textContent=cmLevel;
+      setStatus('cm-status',`🎉 Level up → ${cmLevel}!`,'warn');
+    } else {
+      setStatus('cm-status','✓ Correct!','ok');
+    }
+  } else {
+    cmStreak=0; document.getElementById('cm-streak').textContent=0;
+    setStatus('cm-status',`✗ Wrong — answer was ${cmCorrect?'YES':'NO'}`,'err');
+  }
+  setTimeout(generateColorMatch, 700);
+}
 
-    </script>
+// ══════════════════════════════════════════
+//  GAME 10 — WORD CATEGORY SORT
+// ══════════════════════════════════════════
+const CATEGORIES = {
+  Animals: ['Dog','Cat','Eagle','Whale','Tiger','Elephant','Penguin','Dolphin','Wolf','Fox','Shark','Lion','Gorilla','Parrot','Cobra'],
+  Fruits:  ['Apple','Mango','Kiwi','Peach','Grape','Lemon','Berry','Cherry','Melon','Plum','Guava','Papaya','Fig','Date','Lime'],
+  Countries:['France','Japan','Brazil','Canada','Egypt','India','Mexico','Italy','Spain','China','Peru','Ghana','Chile','Vietnam','Greece'],
+  Sports:  ['Soccer','Tennis','Hockey','Boxing','Rugby','Swimming','Cricket','Golf','Cycling','Archery','Fencing','Judo','Rowing','Volleyball','Badminton'],
+  Colors:  ['Crimson','Azure','Ivory','Teal','Scarlet','Indigo','Amber','Maroon','Cyan','Violet','Ochre','Jade','Mauve','Coral','Umber'],
+  Science: ['Photon','Neuron','Genome','Plasma','Osmosis','Catalyst','Entropy','Isotope','Polymer','Quantum','Nebula','Fission','Allele','Valence','Epoch'],
+};
+const CAT_NAMES = Object.keys(CATEGORIES);
+let csLevel=1, csScore=0, csStreak=0, csActiveCats=[], csCurrentWord='', csCurrentCat='';
+
+function startWordSort() {
+  csLevel=1; csScore=0; csStreak=0;
+  document.getElementById('cs-level').textContent=1;
+  document.getElementById('cs-score').textContent=0;
+  document.getElementById('cs-streak').textContent=0;
+  nextWordSort();
+}
+function nextWordSort() {
+  const numCats = Math.min(2 + csLevel, 6);
+  csActiveCats = [...CAT_NAMES].sort(()=>Math.random()-0.5).slice(0, numCats);
+  csCurrentCat = pick(csActiveCats);
+  const wordPool = CATEGORIES[csCurrentCat];
+  csCurrentWord = pick(wordPool);
+  document.getElementById('cs-item').innerHTML = `<div class="item-tag">${csCurrentWord}</div>`;
+  const catsEl = document.getElementById('cs-cats');
+  catsEl.innerHTML = '';
+  csActiveCats.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'cs-cat-btn';
+    b.textContent = cat;
+    b.onclick = () => checkWordSort(cat, b);
+    catsEl.appendChild(b);
+  });
+  setStatus('cs-status', `Which category does "${csCurrentWord}" belong to?`, 'info');
+}
+function checkWordSort(chosen, btn) {
+  const isCorrect = chosen === csCurrentCat;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    // Highlight correct
+    document.querySelectorAll('.cs-cat-btn').forEach(b => { if (b.textContent===csCurrentCat) b.classList.add('correct'); });
+  }
+  document.querySelectorAll('.cs-cat-btn').forEach(b => b.onclick=null);
+  if (isCorrect) {
+    csScore++; csStreak++;
+    document.getElementById('cs-score').textContent=csScore;
+    document.getElementById('cs-streak').textContent=csStreak;
+    if (csStreak % 7===0 && csLevel<5) {
+      csLevel++; document.getElementById('cs-level').textContent=csLevel;
+      setStatus('cs-status',`🎉 Level up → ${csLevel}! More categories now.`,'warn');
+    } else setStatus('cs-status','✓ Correct!','ok');
+  } else {
+    csStreak=0; document.getElementById('cs-streak').textContent=0;
+    setStatus('cs-status',`✗ "${csCurrentWord}" is a ${csCurrentCat}`,'err');
+  }
+  setTimeout(nextWordSort, 900);
+}
+
+// ── Init ──
+startVisSearch();
+startOdd();
+</script>
 </body>
 </html>
