@@ -28,7 +28,6 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
-  /* Scanline effect */
   body::before {
     content: '';
     position: fixed;
@@ -39,11 +38,7 @@
   }
 
   /* ── HEADER ── */
-  header {
-    text-align: center;
-    padding: 32px 20px 16px;
-    position: relative;
-  }
+  header { text-align: center; padding: 32px 20px 16px; position: relative; }
   header h1 {
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(1.6rem, 5vw, 3.2rem);
@@ -55,7 +50,6 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: shimmer 3s linear infinite;
-    text-shadow: none;
     filter: drop-shadow(0 0 18px rgba(0,212,255,0.5));
   }
   @keyframes shimmer { to { background-position: 200% center; } }
@@ -121,20 +115,14 @@
     top: 0; left: 0; right: 0;
     height: 2px;
   }
-  .card.blue::before  { background: linear-gradient(90deg, transparent, var(--neon-blue), transparent); }
-  .card.green::before { background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
-  .card.pink::before  { background: linear-gradient(90deg, transparent, var(--neon-pink), transparent); }
-  .card.yellow::before{ background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent); }
-  .card.purple::before{ background: linear-gradient(90deg, transparent, var(--neon-purple), transparent); }
-  .card.orange::before{ background: linear-gradient(90deg, transparent, var(--neon-orange), transparent); }
+  .card.blue::before   { background: linear-gradient(90deg, transparent, var(--neon-blue), transparent); }
+  .card.green::before  { background: linear-gradient(90deg, transparent, var(--neon-green), transparent); }
+  .card.pink::before   { background: linear-gradient(90deg, transparent, var(--neon-pink), transparent); }
+  .card.yellow::before { background: linear-gradient(90deg, transparent, var(--neon-yellow), transparent); }
+  .card.purple::before { background: linear-gradient(90deg, transparent, var(--neon-purple), transparent); }
+  .card.orange::before { background: linear-gradient(90deg, transparent, var(--neon-orange), transparent); }
 
-  .game-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-bottom: 6px;
-  }
+  .game-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 6px; }
   .game-title.blue   { color: var(--neon-blue); }
   .game-title.green  { color: var(--neon-green); }
   .game-title.pink   { color: var(--neon-pink); }
@@ -142,72 +130,26 @@
   .game-title.purple { color: var(--neon-purple); }
   .game-title.orange { color: var(--neon-orange); }
 
-  .game-desc {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    margin-bottom: 18px;
-    font-family: 'Share Tech Mono', monospace;
-    line-height: 1.6;
-  }
+  .game-desc { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 18px; font-family: 'Share Tech Mono', monospace; line-height: 1.6; }
 
   /* ── HUD BAR ── */
-  .hud {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .hud-item {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .hud-val {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-  }
+  .hud { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .hud-item { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+  .hud-val { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
   .hud-val.blue   { color: var(--neon-blue); }
   .hud-val.green  { color: var(--neon-green); }
   .hud-val.pink   { color: var(--neon-pink); }
 
   /* ── BUTTONS ── */
-  .btn {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin: 4px;
-    font-weight: 700;
-  }
-  .btn-primary {
-    background: var(--neon-blue);
-    color: var(--bg);
-  }
+  .btn { font-family: 'Orbitron', sans-serif; font-size: 0.68rem; letter-spacing: 0.1em; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: all 0.15s; margin: 4px; font-weight: 700; }
+  .btn-primary  { background: var(--neon-blue); color: var(--bg); }
   .btn-primary:hover { box-shadow: 0 0 16px rgba(0,212,255,0.6); transform: translateY(-1px); }
-  .btn-success {
-    background: var(--neon-green);
-    color: var(--bg);
-  }
-  .btn-danger  { background: var(--neon-pink); color: white; }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-  }
+  .btn-success  { background: var(--neon-green); color: var(--bg); }
+  .btn-danger   { background: var(--neon-pink); color: white; }
+  .btn-outline  { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
   .btn-outline:hover { border-color: var(--text-dim); color: var(--text); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* answer buttons row */
   .answer-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; justify-content: center; }
   .ans-btn {
     padding: 12px 22px;
@@ -224,21 +166,14 @@
   }
   .ans-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,212,255,0.06); }
   .ans-btn.correct { border-color: var(--neon-green) !important; background: rgba(0,255,159,0.15) !important; color: var(--neon-green) !important; }
-  .ans-btn.wrong   { border-color: var(--neon-pink) !important; background: rgba(255,45,120,0.15) !important; color: var(--neon-pink) !important; }
+  .ans-btn.wrong   { border-color: var(--neon-pink)  !important; background: rgba(255,45,120,0.15)  !important; color: var(--neon-pink)  !important; }
 
   /* ── STATUS MESSAGE ── */
-  .status {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.9rem;
-    min-height: 26px;
-    text-align: center;
-    margin: 10px 0;
-    transition: all 0.2s;
-  }
-  .status.ok  { color: var(--neon-green); }
-  .status.err { color: var(--neon-pink); }
-  .status.info{ color: var(--neon-blue); }
-  .status.warn{ color: var(--neon-yellow); }
+  .status { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; min-height: 26px; text-align: center; margin: 10px 0; transition: all 0.2s; }
+  .status.ok   { color: var(--neon-green); }
+  .status.err  { color: var(--neon-pink); }
+  .status.info { color: var(--neon-blue); }
+  .status.warn { color: var(--neon-yellow); }
 
   /* ── PROGRESS BAR ── */
   .progress-wrap { background: var(--surface2); height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
@@ -260,9 +195,9 @@
     user-select: none;
     margin: 16px 0;
   }
-  #react-zone.wait   { background: rgba(255,45,120,0.2); border: 2px solid var(--neon-pink); color: var(--neon-pink); }
-  #react-zone.ready  { background: rgba(0,255,159,0.2); border: 2px solid var(--neon-green); color: var(--neon-green); animation: pulse 0.3s ease-in-out 3; }
-  #react-zone.idle   { background: var(--surface2); border: 2px dashed var(--border); color: var(--text-dim); }
+  #react-zone.wait  { background: rgba(255,45,120,0.2); border: 2px solid var(--neon-pink); color: var(--neon-pink); }
+  #react-zone.ready { background: rgba(0,255,159,0.2); border: 2px solid var(--neon-green); color: var(--neon-green); animation: pulse 0.3s ease-in-out 3; }
+  #react-zone.idle  { background: var(--surface2); border: 2px dashed var(--border); color: var(--text-dim); }
   @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
 
   /* ── STROOP ── */
@@ -283,23 +218,8 @@
   .stroop-timer-bar { background: var(--neon-pink); }
 
   /* ── VISUAL SEARCH ── */
-  #vs-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-    padding: 12px;
-    background: var(--surface2);
-    border-radius: 8px;
-    margin: 12px 0;
-  }
-  .vs-dot {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.1s;
-    border: 2px solid transparent;
-  }
+  #vs-grid { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 12px; background: var(--surface2); border-radius: 8px; margin: 12px 0; }
+  .vs-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; transition: transform 0.1s; border: 2px solid transparent; }
   .vs-dot:hover { transform: scale(1.2); }
 
   /* ── MATH ── */
@@ -328,35 +248,17 @@
     transition: border-color 0.2s;
   }
   #math-input:focus { border-color: var(--neon-yellow); }
+  .math-ops-hint { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--text-dim); text-align: center; margin-bottom: 8px; letter-spacing: 0.1em; }
 
   /* ── SEQUENCE MEMORY ── */
-  #seq-board {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    max-width: 300px;
-    margin: 16px auto;
-  }
-  .seq-tile {
-    height: 60px;
-    border-radius: 8px;
-    background: var(--surface2);
-    border: 2px solid var(--border);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
+  #seq-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 260px; margin: 16px auto; }
+  .seq-tile { height: 70px; border-radius: 8px; background: var(--surface2); border: 2px solid var(--border); cursor: pointer; transition: all 0.15s; }
   .seq-tile:hover:not(.inactive) { filter: brightness(1.3); transform: scale(1.02); }
   .seq-tile.lit { filter: brightness(2.5); transform: scale(1.05); box-shadow: 0 0 20px currentColor; }
   .seq-tile.inactive { cursor: not-allowed; opacity: 0.5; }
 
   /* ── CHIMP ── */
-  #chimp-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-width: 280px;
-    margin: 16px auto;
-  }
+  #chimp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-width: 280px; margin: 16px auto; }
   .chimp-cell {
     height: 50px;
     border-radius: 6px;
@@ -373,43 +275,20 @@
     color: var(--bg);
     user-select: none;
   }
-  .chimp-cell:hover { filter: brightness(1.2); }
+  .chimp-cell:hover  { filter: brightness(1.2); }
   .chimp-cell.active { background: var(--neon-green); }
-  .chimp-cell.done   { background: rgba(0,255,159,0.2); border-color: var(--neon-green); }
+  .chimp-cell.done   { background: rgba(0,255,159,0.2); border-color: var(--neon-green); color: var(--neon-green); }
   .chimp-cell.wrong  { background: rgba(255,45,120,0.3); border-color: var(--neon-pink); animation: shake 0.3s; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 
   /* ── ODD ONE OUT ── */
-  #odd-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin: 16px 0;
-  }
-  .odd-item {
-    width: 52px; height: 52px;
-    cursor: pointer;
-    transition: transform 0.1s, box-shadow 0.1s;
-    flex-shrink: 0;
-  }
+  #odd-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0; }
+  .odd-item { width: 52px; height: 52px; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; flex-shrink: 0; }
   .odd-item:hover { transform: scale(1.1); }
 
   /* ── N-BACK ── */
-  #nback-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    max-width: 220px;
-    margin: 16px auto;
-  }
-  .nback-cell {
-    height: 60px;
-    border-radius: 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    transition: all 0.15s;
-  }
+  #nback-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 220px; margin: 16px auto; }
+  .nback-cell { height: 60px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); transition: all 0.15s; }
   .nback-cell.lit { background: var(--neon-purple); box-shadow: 0 0 20px rgba(191,95,255,0.5); border-color: var(--neon-purple); }
 
   .nback-btns { display: flex; gap: 12px; justify-content: center; margin: 12px 0; }
@@ -426,147 +305,45 @@
     transition: all 0.15s;
     font-weight: 700;
   }
-  .nback-btn.match-btn:hover, .nback-btn.match-btn.pressed { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,255,159,0.08); }
+  .nback-btn.match-btn:hover, .nback-btn.match-btn.pressed    { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,255,159,0.08); }
   .nback-btn.no-match-btn:hover, .nback-btn.no-match-btn.pressed { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,120,0.08); }
 
   /* ── SPEED TYPING ── */
-  #typing-target {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1rem;
-    line-height: 1.8;
-    padding: 16px;
-    background: var(--surface2);
-    border-radius: 8px;
-    margin: 12px 0;
-    min-height: 60px;
-    word-break: break-word;
-    letter-spacing: 0.05em;
-  }
+  #typing-target { font-family: 'Share Tech Mono', monospace; font-size: 1rem; line-height: 1.8; padding: 16px; background: var(--surface2); border-radius: 8px; margin: 12px 0; min-height: 60px; word-break: break-word; letter-spacing: 0.05em; }
   .char-done    { color: var(--neon-green); }
   .char-wrong   { color: var(--neon-pink); text-decoration: underline; }
   .char-pending { color: var(--text-dim); }
   .char-cursor  { border-left: 2px solid var(--neon-blue); animation: blink 0.8s step-end infinite; }
   @keyframes blink { 50%{border-color:transparent} }
-
-  #typing-input {
-    background: var(--surface2);
-    border: 2px solid var(--border);
-    color: var(--text);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1rem;
-    padding: 10px 16px;
-    border-radius: 8px;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  #typing-input { background: var(--surface2); border: 2px solid var(--border); color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 1rem; padding: 10px 16px; border-radius: 8px; width: 100%; outline: none; transition: border-color 0.2s; }
   #typing-input:focus { border-color: var(--neon-orange); }
 
   /* ── COLOR MATCH ── */
-  #cm-display {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 900;
-    text-align: center;
-    padding: 20px;
-    letter-spacing: 0.08em;
-    transition: all 0.15s;
-  }
-  #cm-box-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.8rem;
-    text-align: center;
-    color: var(--text-dim);
-    margin-bottom: 4px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  #cm-rule-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-align: center;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: inline-block;
-    margin: 0 auto 12px;
-  }
-  .cm-rule-match  { color: var(--neon-green); border-color: var(--neon-green); }
-  .cm-rule-color  { color: var(--neon-blue);  border-color: var(--neon-blue); }
-  .cm-rule-both   { color: var(--neon-purple); border-color: var(--neon-purple); }
+  #cm-display { font-family: 'Orbitron', sans-serif; font-size: 2.8rem; font-weight: 900; text-align: center; padding: 20px; letter-spacing: 0.08em; transition: all 0.15s; }
+  #cm-box-label { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; text-align: center; color: var(--text-dim); margin-bottom: 4px; letter-spacing: 0.15em; text-transform: uppercase; }
+  #cm-rule-label { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; letter-spacing: 0.12em; text-align: center; padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px; display: inline-block; margin: 0 auto 12px; }
+  .cm-rule-match  { color: var(--neon-green);  border-color: var(--neon-green) !important; }
+  .cm-rule-color  { color: var(--neon-blue);   border-color: var(--neon-blue)  !important; }
+  .cm-rule-both   { color: var(--neon-purple); border-color: var(--neon-purple)!important; }
   #cm-rule-wrap   { text-align: center; margin-bottom: 12px; }
 
   /* ── WORD SCRAMBLE ── */
-  #ws-scrambled {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    color: var(--neon-orange);
-    letter-spacing: 0.25em;
-    margin: 16px 0;
-    text-shadow: 0 0 20px rgba(255,107,0,0.4);
-  }
+  #ws-scrambled { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700; text-align: center; color: var(--neon-orange); letter-spacing: 0.25em; margin: 16px 0; text-shadow: 0 0 20px rgba(255,107,0,0.4); }
   .ws-options { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 12px 0; }
-  .ws-option {
-    padding: 10px 20px;
-    border: 2px solid var(--border);
-    background: var(--surface2);
-    color: var(--text);
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Exo 2', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: all 0.15s;
-    min-width: 110px;
-    text-align: center;
-  }
-  .ws-option:hover { border-color: var(--neon-orange); color: var(--neon-orange); }
-  .ws-option.correct { border-color: var(--neon-green) !important; color: var(--neon-green) !important; background: rgba(0,255,159,0.12) !important; }
-  .ws-option.wrong   { border-color: var(--neon-pink)  !important; color: var(--neon-pink)  !important; background: rgba(255,45,120,0.12) !important; }
+  .ws-option { padding: 10px 20px; border: 2px solid var(--border); background: var(--surface2); color: var(--text); border-radius: 8px; cursor: pointer; font-family: 'Exo 2', sans-serif; font-size: 0.95rem; font-weight: 600; transition: all 0.15s; min-width: 110px; text-align: center; }
+  .ws-option:hover    { border-color: var(--neon-orange); color: var(--neon-orange); }
+  .ws-option.correct  { border-color: var(--neon-green)  !important; color: var(--neon-green)  !important; background: rgba(0,255,159,0.12) !important; }
+  .ws-option.wrong    { border-color: var(--neon-pink)   !important; color: var(--neon-pink)   !important; background: rgba(255,45,120,0.12)!important; }
 
   /* ── CATEGORY SORT ── */
-  #cs-item {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-align: center;
-    color: var(--text);
-    margin: 20px 0 10px;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #cs-item .item-tag {
-    background: var(--surface2);
-    border: 2px solid var(--border);
-    padding: 12px 28px;
-    border-radius: 10px;
-    letter-spacing: 0.05em;
-  }
+  #cs-item { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; text-align: center; color: var(--text); margin: 20px 0 10px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+  #cs-item .item-tag { background: var(--surface2); border: 2px solid var(--border); padding: 12px 28px; border-radius: 10px; letter-spacing: 0.05em; }
   .cs-cats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .cs-cat-btn {
-    padding: 14px 28px;
-    border: 2px solid var(--border);
-    background: var(--surface2);
-    color: var(--text);
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'Exo 2', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.15s;
-    min-width: 130px;
-    text-align: center;
-  }
-  .cs-cat-btn:hover { border-color: var(--neon-blue); color: var(--neon-blue); }
-  .cs-cat-btn.correct { border-color: var(--neon-green) !important; background: rgba(0,255,159,0.1) !important; color: var(--neon-green) !important; }
-  .cs-cat-btn.wrong   { border-color: var(--neon-pink)  !important; background: rgba(255,45,120,0.1) !important; color: var(--neon-pink)  !important; }
+  .cs-cat-btn { padding: 14px 28px; border: 2px solid var(--border); background: var(--surface2); color: var(--text); border-radius: 10px; cursor: pointer; font-family: 'Exo 2', sans-serif; font-size: 1rem; font-weight: 600; transition: all 0.15s; min-width: 130px; text-align: center; }
+  .cs-cat-btn:hover   { border-color: var(--neon-blue); color: var(--neon-blue); }
+  .cs-cat-btn.correct { border-color: var(--neon-green)  !important; background: rgba(0,255,159,0.1)  !important; color: var(--neon-green)  !important; }
+  .cs-cat-btn.wrong   { border-color: var(--neon-pink)   !important; background: rgba(255,45,120,0.1) !important; color: var(--neon-pink)   !important; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 520px) {
     nav { gap: 4px; padding: 10px 12px; }
     .tab { font-size: 0.5rem; padding: 6px 9px; }
@@ -617,7 +394,7 @@
 <div class="game-panel" id="p1">
   <div class="card pink">
     <div class="game-title pink">🎨 STROOP CHALLENGE</div>
-    <div class="game-desc">Click the button matching the TEXT COLOR (not the word meaning). Under time pressure — the faster you go, the higher your score. Higher levels add more colors.</div>
+    <div class="game-desc">Click the button matching the TEXT COLOR (not the word meaning). Under time pressure — faster means higher score. Higher levels add more colors.</div>
     <div class="hud">
       <div class="hud-item">LEVEL <span class="hud-val pink" id="st-level">1</span></div>
       <div class="hud-item">SCORE <span class="hud-val" id="st-score">0</span></div>
@@ -651,7 +428,7 @@
 <div class="game-panel" id="p3">
   <div class="card yellow">
     <div class="game-title yellow">🔢 QUICK MATH</div>
-    <div class="game-desc">Solve equations quickly. Higher levels: larger numbers, chained multi-step problems, and time pressure.</div>
+    <div class="game-desc">Solve equations fast. All four operations (+  −  ×  ÷) active from level 1. Higher levels: larger numbers, chained steps, tighter time limits.</div>
     <div class="hud">
       <div class="hud-item">LEVEL <span class="hud-val yellow" id="m-level">1</span></div>
       <div class="hud-item">SCORE <span class="hud-val" id="m-score">0</span></div>
@@ -659,13 +436,14 @@
     </div>
     <div class="progress-wrap"><div class="progress-bar" id="m-bar" style="width:100%;background:var(--neon-yellow)"></div></div>
     <div id="math-eq">PRESS START</div>
+    <div class="math-ops-hint" id="math-ops-hint">OPS: + −</div>
     <div class="math-input-row">
       <input type="number" id="math-input" placeholder="?" onkeydown="if(event.key==='Enter')checkMath()">
       <button class="btn btn-primary" onclick="checkMath()">✓</button>
     </div>
     <div class="status" id="m-status"></div>
     <button class="btn btn-primary" onclick="startMath()">START</button>
-    <button class="btn btn-outline" onclick="newMathProblem()">SKIP</button>
+    <button class="btn btn-outline" onclick="skipMath()">SKIP</button>
   </div>
 </div>
 
@@ -679,9 +457,9 @@
       <div class="hud-item">BEST <span class="hud-val" id="seq-best">0</span></div>
     </div>
     <div id="seq-board">
-      <div class="seq-tile" style="background:rgba(255,45,120,0.4);border-color:var(--neon-pink);" data-i="0" onclick="seqClick(0)"></div>
-      <div class="seq-tile" style="background:rgba(0,212,255,0.4);border-color:var(--neon-blue);" data-i="1" onclick="seqClick(1)"></div>
-      <div class="seq-tile" style="background:rgba(0,255,159,0.4);border-color:var(--neon-green);" data-i="2" onclick="seqClick(2)"></div>
+      <div class="seq-tile" style="background:rgba(255,45,120,0.4);border-color:var(--neon-pink);"   data-i="0" onclick="seqClick(0)"></div>
+      <div class="seq-tile" style="background:rgba(0,212,255,0.4);border-color:var(--neon-blue);"   data-i="1" onclick="seqClick(1)"></div>
+      <div class="seq-tile" style="background:rgba(0,255,159,0.4);border-color:var(--neon-green);"  data-i="2" onclick="seqClick(2)"></div>
       <div class="seq-tile" style="background:rgba(255,230,0,0.4);border-color:var(--neon-yellow);" data-i="3" onclick="seqClick(3)"></div>
       <div class="seq-tile" style="background:rgba(191,95,255,0.4);border-color:var(--neon-purple);" data-i="4" onclick="seqClick(4)"></div>
       <div class="seq-tile" style="background:rgba(255,107,0,0.4);border-color:var(--neon-orange);" data-i="5" onclick="seqClick(5)"></div>
@@ -695,7 +473,7 @@
 <div class="game-panel" id="p5">
   <div class="card green">
     <div class="game-title green">🦧 CHIMP TEST</div>
-    <div class="game-desc">Numbers flash briefly. Click them in ascending order (1, 2, 3...). Each level adds more numbers. Beat all levels to win!</div>
+    <div class="game-desc">Numbers flash briefly — click them in ascending order (1, 2, 3…). Each level adds one more number. You have 3 lives.</div>
     <div class="hud">
       <div class="hud-item">LEVEL <span class="hud-val green" id="ch-level">1</span></div>
       <div class="hud-item">NUMBERS <span class="hud-val" id="ch-count">4</span></div>
@@ -703,7 +481,7 @@
     </div>
     <div id="chimp-grid"></div>
     <div class="status" id="ch-status">Press Start to begin</div>
-    <button class="btn btn-success" onclick="startChimp()">START</button>
+    <button class="btn btn-success" onclick="newChimpGame()">START</button>
   </div>
 </div>
 
@@ -727,7 +505,7 @@
 <div class="game-panel" id="p7">
   <div class="card purple">
     <div class="game-title purple">🧠 N-BACK CHALLENGE</div>
-    <div class="game-desc">A square lights up each round. Decide if the current position matches the one from N steps ago. Higher levels increase N.</div>
+    <div class="game-desc">A square lights up each round. Decide if the current position matches the one from N steps ago. Hit 15 correct answers to raise N.</div>
     <div class="hud">
       <div class="hud-item">N = <span class="hud-val purple" id="nb-n">1</span></div>
       <div class="hud-item">SCORE <span class="hud-val" id="nb-score">0</span></div>
@@ -746,7 +524,7 @@
       <div class="nback-cell" id="nb8"></div>
     </div>
     <div class="nback-btns">
-      <button class="nback-btn match-btn" id="nb-match-btn" onclick="nbAnswer(true)" disabled>✓ MATCH</button>
+      <button class="nback-btn match-btn"    id="nb-match-btn"   onclick="nbAnswer(true)"  disabled>✓ MATCH</button>
       <button class="nback-btn no-match-btn" id="nb-nomatch-btn" onclick="nbAnswer(false)" disabled>✗ NO MATCH</button>
     </div>
     <div class="status" id="nb-status">Press Start · identify if current position matches N steps back</div>
@@ -822,32 +600,28 @@
 // ══════════════════════════════════════════
 //  NAVIGATION
 // ══════════════════════════════════════════
-const tabs = document.querySelectorAll('.tab');
+const tabs   = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.game-panel');
 function showGame(i) {
-  tabs.forEach((t,j) => t.classList.toggle('active', i===j));
+  tabs.forEach((t,j)   => t.classList.toggle('active', i===j));
   panels.forEach((p,j) => p.classList.toggle('active', i===j));
 }
 
 // ══════════════════════════════════════════
 //  UTILS
 // ══════════════════════════════════════════
-function rnd(a,b) { return Math.floor(Math.random()*(b-a+1))+a; }
+function rnd(a,b)  { return Math.floor(Math.random()*(b-a+1))+a; }
 function pick(arr) { return arr[rnd(0,arr.length-1)]; }
 function setStatus(id, msg, cls='info') {
   const el = document.getElementById(id);
   el.textContent = msg;
   el.className = 'status ' + cls;
 }
-function flashStatus(id, msg, cls, delay=1500) {
-  setStatus(id, msg, cls);
-  return delay;
-}
 
 // ══════════════════════════════════════════
 //  GAME 0 — REACTION TIME
 // ══════════════════════════════════════════
-let rtState = 'idle', rtTimer, rtStart, rtStreak = 0, rtBest = Infinity, rtLevel = 1, rtHistory = [];
+let rtState='idle', rtTimer, rtStart, rtStreak=0, rtBest=Infinity, rtLevel=1, rtHistory=[];
 
 function handleReact() {
   const zone = document.getElementById('react-zone');
@@ -855,28 +629,29 @@ function handleReact() {
     zone.className = 'wait';
     zone.textContent = 'WAIT FOR GREEN...';
     rtState = 'waiting';
-    // Possibly add fake flash for level >= 3
+    // False flash at level 3+
     if (rtLevel >= 3) {
       const fakeDelay = rnd(800, 1800);
       setTimeout(() => {
         if (rtState !== 'waiting') return;
         zone.className = 'ready';
-        zone.textContent = 'FAKE!';
+        zone.textContent = '—FAKE—';
         setTimeout(() => {
           if (rtState !== 'waiting') return;
           zone.className = 'wait';
           zone.textContent = 'WAIT FOR GREEN...';
-        }, 150);
+        }, 160);
       }, fakeDelay);
     }
-    const baseMin = Math.max(800, 2200 - rtLevel * 200);
-    const baseMax = Math.max(1500, 4000 - rtLevel * 200);
+    const baseMin = Math.max(800,  2200 - rtLevel*200);
+    const baseMax = Math.max(1500, 4000 - rtLevel*200);
     rtTimer = setTimeout(() => {
       zone.className = 'ready';
       zone.textContent = '⚡ CLICK NOW! ⚡';
       rtState = 'go';
       rtStart = Date.now();
     }, rnd(baseMin, baseMax));
+
   } else if (rtState === 'waiting') {
     clearTimeout(rtTimer);
     rtStreak = 0;
@@ -885,22 +660,22 @@ function handleReact() {
     zone.textContent = 'TAP TO START';
     rtState = 'idle';
     setStatus('rt-status', '❌ Too early! Wait for green.', 'err');
+
   } else if (rtState === 'go') {
     const ms = Date.now() - rtStart;
     rtHistory.push(ms);
     if (rtHistory.length > 5) rtHistory.shift();
     rtStreak++;
     if (ms < rtBest) rtBest = ms;
-    document.getElementById('rt-best').textContent = rtBest + ' ms';
+    document.getElementById('rt-best').textContent   = rtBest + ' ms';
     document.getElementById('rt-streak').textContent = rtStreak;
-    // Level up
     if (rtStreak % 5 === 0 && rtLevel < 8) {
       rtLevel++;
       document.getElementById('rt-level').textContent = rtLevel;
       setStatus('rt-status', `⚡ ${ms}ms — Level up! Now level ${rtLevel}`, 'warn');
     } else {
-      let grade = ms < 200 ? '🏆 ELITE' : ms < 250 ? '🥇 GREAT' : ms < 320 ? '✅ GOOD' : ms < 400 ? '👍 OK' : '🐢 SLOW';
-      setStatus('rt-status', `${ms} ms — ${grade}`, ms < 300 ? 'ok' : 'info');
+      const grade = ms<200?'🏆 ELITE':ms<250?'🥇 GREAT':ms<320?'✅ GOOD':ms<400?'👍 OK':'🐢 SLOW';
+      setStatus('rt-status', `${ms} ms — ${grade}`, ms<300?'ok':'info');
     }
     const avg = Math.round(rtHistory.reduce((a,b)=>a+b,0)/rtHistory.length);
     document.getElementById('rt-history').textContent = `Avg last ${rtHistory.length}: ${avg}ms`;
@@ -919,7 +694,7 @@ const STROOP_PALETTES = [
   ['Red','Blue','Green','Yellow','Purple','Orange','Cyan','Pink'],
 ];
 const STROOP_CSS = {Red:'#ff2d78',Blue:'#00d4ff',Green:'#00ff9f',Yellow:'#ffe600',Purple:'#bf5fff',Orange:'#ff6b00',Cyan:'#00ffff',Pink:'#ff80b0'};
-let stLevel=1, stScore=0, stStreak=0, stCorrectColor='', stRunning=false, stBarAnim, stBarTimeout;
+let stLevel=1, stScore=0, stStreak=0, stCorrectColor='', stRunning=false, stBarTimeout;
 
 function startStroop() {
   stRunning = true;
@@ -929,7 +704,7 @@ function startStroop() {
 function generateStroop() {
   if (!stRunning) return;
   const palette = STROOP_PALETTES[Math.min(stLevel-1, STROOP_PALETTES.length-1)];
-  const word = pick(palette);
+  const word  = pick(palette);
   const color = pick(palette);
   stCorrectColor = color;
   const el = document.getElementById('stroop-word');
@@ -938,8 +713,7 @@ function generateStroop() {
   // Build buttons
   const btnsEl = document.getElementById('stroop-btns');
   btnsEl.innerHTML = '';
-  const shuffled = [...palette].sort(()=>Math.random()-0.5);
-  shuffled.forEach(c => {
+  [...palette].sort(()=>Math.random()-0.5).forEach(c => {
     const b = document.createElement('button');
     b.className = 'ans-btn';
     b.textContent = c;
@@ -950,12 +724,11 @@ function generateStroop() {
   });
   // Timer bar
   clearTimeout(stBarTimeout);
-  cancelAnimationFrame(stBarAnim);
   const bar = document.getElementById('stroop-bar');
-  const timeLimit = Math.max(1200, 3000 - stLevel * 300);
+  const timeLimit = Math.max(1200, 3000 - stLevel*300);
   bar.style.transition = 'none';
   bar.style.width = '100%';
-  bar.offsetHeight;
+  bar.offsetHeight; // force reflow
   bar.style.transition = `width ${timeLimit}ms linear`;
   bar.style.width = '0%';
   stBarTimeout = setTimeout(() => {
@@ -973,7 +746,7 @@ function checkStroop(chosen, btn) {
   btn.classList.add(isCorrect ? 'correct' : 'wrong');
   if (isCorrect) {
     stScore++; stStreak++;
-    document.getElementById('st-score').textContent = stScore;
+    document.getElementById('st-score').textContent  = stScore;
     document.getElementById('st-streak').textContent = stStreak;
     if (stStreak % 8 === 0 && stLevel < 3) {
       stLevel++;
@@ -996,16 +769,15 @@ function checkStroop(chosen, btn) {
 let vsLevel=1, vsScore=0, vsTargetScore=5, vsTargets=[];
 
 function startVisSearch() {
-  document.getElementById('vs-level').textContent = vsLevel;
+  document.getElementById('vs-level').textContent  = vsLevel;
   document.getElementById('vs-target').textContent = vsTargetScore;
   const grid = document.getElementById('vs-grid');
   grid.innerHTML = '';
   vsTargets = [];
-  const totalDots = 20 + vsLevel * 8;
+  const totalDots  = 20 + vsLevel * 8;
   const numTargets = vsLevel <= 2 ? 1 : Math.min(3, Math.floor(vsLevel/2));
-  const targetIndices = new Set();
-  while (targetIndices.size < numTargets) targetIndices.add(rnd(0, totalDots-1));
-  // Color scheme: distractor color, target color
+  const targetSet  = new Set();
+  while (targetSet.size < numTargets) targetSet.add(rnd(0, totalDots-1));
   const schemes = [
     {dist:'#ff2d78', target:'#00d4ff'},
     {dist:'#00ff9f', target:'#ffe600'},
@@ -1015,12 +787,14 @@ function startVisSearch() {
   for (let i = 0; i < totalDots; i++) {
     const d = document.createElement('div');
     d.className = 'vs-dot';
-    const isTarget = targetIndices.has(i);
+    const isTarget = targetSet.has(i);
     if (isTarget) vsTargets.push(i);
-    d.style.background = isTarget ? scheme.target : scheme.dist;
-    if (vsLevel >= 4) {
-      // Add noise: slight size variation to distractors
-      if (!isTarget) { const s = rnd(24,32); d.style.width=d.style.height=s+'px'; }
+    const dotColor = isTarget ? scheme.target : scheme.dist;
+    d.style.background = dotColor;
+    d.dataset.origColor = dotColor; // FIX: store original color for wrong-click revert
+    if (vsLevel >= 4 && !isTarget) {
+      const s = rnd(24, 32);
+      d.style.width = d.style.height = s + 'px';
     }
     d.onclick = () => vsClick(i, d);
     grid.appendChild(d);
@@ -1031,14 +805,14 @@ function vsClick(i, el) {
   if (vsTargets.includes(i)) {
     vsTargets.splice(vsTargets.indexOf(i), 1);
     el.style.background = '#00ff9f';
-    el.style.transform = 'scale(1.4)';
+    el.style.transform  = 'scale(1.4)';
     el.onclick = null;
     if (vsTargets.length === 0) {
       vsScore++;
       document.getElementById('vs-score').textContent = vsScore;
       if (vsScore >= vsTargetScore) {
         vsLevel++; vsScore = 0; vsTargetScore = 5 + vsLevel;
-        document.getElementById('vs-level').textContent = vsLevel;
+        document.getElementById('vs-level').textContent  = vsLevel;
         document.getElementById('vs-target').textContent = vsTargetScore;
         setStatus('vs-status', `🎉 Level up! → Level ${vsLevel}`, 'warn');
       } else {
@@ -1050,74 +824,148 @@ function vsClick(i, el) {
     }
   } else {
     el.style.background = '#ff2d78';
-    el.style.transform = 'scale(0.8)';
-    setTimeout(() => { el.style.background = el.dataset.origColor || '#ff2d78'; el.style.transform=''; }, 200);
+    el.style.transform  = 'scale(0.8)';
+    // FIX: use stored original color
+    setTimeout(() => { el.style.background = el.dataset.origColor; el.style.transform = ''; }, 250);
     setStatus('vs-status', '✗ Wrong dot!', 'err');
   }
 }
 
 // ══════════════════════════════════════════
-//  GAME 3 — QUICK MATH
+//  GAME 3 — QUICK MATH  (all 4 ops fixed)
 // ══════════════════════════════════════════
-let mLevel=1, mScore=0, mStreak=0, mAnswer, mRunning=false, mBarAnim, mBarTimeout;
+/*
+  Level 1–2 : + −
+  Level 3–4 : + − ×
+  Level 5+  : + − × ÷
+  Level 6+  : chained two-step problems for all ops
+  Number ranges grow with level.
+*/
+let mLevel=1, mScore=0, mStreak=0, mAnswer, mRunning=false, mBarTimeout;
+
+// Hint label for which ops are active
+const OPS_HINT = [
+  'OPS: + −',        // level 1
+  'OPS: + −',        // level 2
+  'OPS: + − ×',      // level 3
+  'OPS: + − ×',      // level 4
+  'OPS: + − × ÷',    // level 5
+  'OPS: + − × ÷  [ CHAINED ]', // level 6
+  'OPS: + − × ÷  [ CHAINED ]', // level 7
+  'OPS: + − × ÷  [ CHAINED ]', // level 8
+];
 
 function startMath() {
   mRunning = true;
+  document.getElementById('m-level').textContent = mLevel;
   newMathProblem();
 }
+
+function skipMath() {
+  if (!mRunning) return;
+  mStreak = 0;
+  document.getElementById('m-streak').textContent = 0;
+  setStatus('m-status', 'Skipped.', 'info');
+  newMathProblem();
+}
+
 function newMathProblem() {
   if (!mRunning) return;
   clearTimeout(mBarTimeout);
-  const a = rnd(1, 10 + mLevel*8);
-  const b = rnd(1, 10 + mLevel*5);
-  const ops = mLevel <= 2 ? ['+','-'] : mLevel <= 4 ? ['+','-','*'] : ['+','-','*','/'];
+
+  // Update ops hint
+  document.getElementById('math-ops-hint').textContent = OPS_HINT[Math.min(mLevel-1, OPS_HINT.length-1)];
+
+  // Choose operation pool based on level
+  const ops = mLevel <= 2 ? ['+','-'] :
+              mLevel <= 4 ? ['+','-','*'] :
+                            ['+','-','*','/'];
   const op = pick(ops);
+
   let eq, ans;
-  if (op === '+') { ans = a+b; eq = `${a} + ${b}`; }
-  else if (op === '-') { ans = Math.abs(a-b); eq = a>=b ? `${a} − ${b}` : `${b} − ${a}`; }
-  else if (op === '*') { const x=rnd(1,5+mLevel),y=rnd(1,5+mLevel); ans=x*y; eq=`${x} × ${y}`; }
-  else { const x=rnd(1,9); const y=rnd(1,5); ans=x*y; eq=`${ans} ÷ ${x} =?`; mAnswer=y; document.getElementById('math-eq').textContent=eq; document.getElementById('math-input').value=''; document.getElementById('math-input').focus(); // Chains
-    if (mLevel >= 6) { const c=rnd(1,5); ans=y+c; eq=`( ${x*y} ÷ ${x} ) + ${c}`; }
-    mAnswer = ans; setStatus('m-status','','info');
-    startMBar(); return; }
-  if (mLevel >= 5) { const c=rnd(1,10+mLevel*3); const op2=pick(['+','-']); const extra=op2==='+' ? ans+c : ans-c; eq=`${eq} ${op2==='+'?'+':'−'} ${c}`; ans=extra; }
+
+  if (op === '+') {
+    const a = rnd(1, 10 + mLevel*8);
+    const b = rnd(1, 10 + mLevel*8);
+    ans = a + b;
+    eq  = `${a} + ${b}`;
+
+  } else if (op === '-') {
+    const a = rnd(1, 10 + mLevel*8);
+    const b = rnd(1, 10 + mLevel*8);
+    // always present as larger − smaller so answer ≥ 0
+    ans = Math.abs(a - b);
+    eq  = a >= b ? `${a} − ${b}` : `${b} − ${a}`;
+
+  } else if (op === '*') {
+    const maxFactor = 5 + mLevel;   // grows with level
+    const x = rnd(2, maxFactor);
+    const y = rnd(2, maxFactor);
+    ans = x * y;
+    eq  = `${x} × ${y}`;
+
+  } else {
+    // ── DIVISION  (FIX: answer is y, NOT x*y) ──
+    // Build problem as (x*y) ÷ x = y  so answer is always a whole number
+    const x = rnd(2, 9);
+    const y = rnd(1, 5 + Math.floor(mLevel/2));
+    ans = y;           // ← correct answer
+    eq  = `${x * y} ÷ ${x}`;
+  }
+
+  // Level 6+ : chain a second operation onto the result
+  if (mLevel >= 6) {
+    const c   = rnd(1, 10 + mLevel*2);
+    const op2 = pick(['+', '-']);
+    eq  = `( ${eq} ) ${op2==='+'?'+':'−'} ${c}`;
+    ans = op2 === '+' ? ans + c : ans - c;
+  }
+
   mAnswer = ans;
   document.getElementById('math-eq').textContent = eq + ' = ?';
-  document.getElementById('math-input').value = '';
+  document.getElementById('math-input').value    = '';
   document.getElementById('math-input').focus();
   setStatus('m-status', '', 'info');
   startMBar();
 }
+
 function startMBar() {
   const bar = document.getElementById('m-bar');
-  const t = Math.max(3000, 10000 - mLevel*800);
-  bar.style.transition = 'none'; bar.style.width='100%'; bar.offsetHeight;
-  bar.style.transition = `width ${t}ms linear`; bar.style.width='0%';
+  const t   = Math.max(3000, 11000 - mLevel*1000);
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  bar.offsetHeight;
+  bar.style.transition = `width ${t}ms linear`;
+  bar.style.width = '0%';
   mBarTimeout = setTimeout(() => {
     if (!mRunning) return;
-    mStreak = 0; document.getElementById('m-streak').textContent=0;
+    mStreak = 0;
+    document.getElementById('m-streak').textContent = 0;
     setStatus('m-status', `⏱ Time! Answer was ${mAnswer}`, 'err');
     setTimeout(newMathProblem, 1000);
   }, t);
 }
+
 function checkMath() {
   if (!mRunning) return;
-  const val = parseInt(document.getElementById('math-input').value);
+  const val = parseInt(document.getElementById('math-input').value, 10);
   if (isNaN(val)) return;
   clearTimeout(mBarTimeout);
   if (val === mAnswer) {
     mScore++; mStreak++;
-    document.getElementById('m-score').textContent = mScore;
+    document.getElementById('m-score').textContent  = mScore;
     document.getElementById('m-streak').textContent = mStreak;
     if (mStreak % 5 === 0 && mLevel < 8) {
-      mLevel++; document.getElementById('m-level').textContent = mLevel;
+      mLevel++;
+      document.getElementById('m-level').textContent = mLevel;
       setStatus('m-status', `🎉 Level up → ${mLevel}!`, 'warn');
     } else {
       setStatus('m-status', '✓ Correct!', 'ok');
     }
     setTimeout(newMathProblem, 500);
   } else {
-    mStreak = 0; document.getElementById('m-streak').textContent=0;
+    mStreak = 0;
+    document.getElementById('m-streak').textContent = 0;
     setStatus('m-status', `✗ Wrong. Answer: ${mAnswer}`, 'err');
     setTimeout(newMathProblem, 1200);
   }
@@ -1126,7 +974,6 @@ function checkMath() {
 // ══════════════════════════════════════════
 //  GAME 4 — SEQUENCE MEMORY
 // ══════════════════════════════════════════
-const SEQ_COLORS = ['var(--neon-pink)','var(--neon-blue)','var(--neon-green)','var(--neon-yellow)','var(--neon-purple)','var(--neon-orange)'];
 let seqLevel=1, seqBest=0, seqSeq=[], seqPlayer=[], seqFlashing=false;
 
 function startSequence() {
@@ -1136,14 +983,14 @@ function startSequence() {
   seqSeq.push(rnd(0, 5));
   document.getElementById('seq-level').textContent = seqLevel;
   setStatus('seq-status', '👁 Watch carefully...', 'info');
-  setTimeout(() => flashSeq(), 600);
+  setTimeout(flashSeq, 600);
 }
 function setInactiveSeq(on) {
   document.querySelectorAll('.seq-tile').forEach(t => t.classList.toggle('inactive', on));
 }
 function flashSeq() {
   seqFlashing = true;
-  const speed = Math.max(300, 700 - seqLevel * 40);
+  const speed = Math.max(300, 700 - seqLevel*40);
   let i = 0;
   const iv = setInterval(() => {
     if (i > 0) document.querySelectorAll('.seq-tile')[seqSeq[i-1]].classList.remove('lit');
@@ -1154,8 +1001,7 @@ function flashSeq() {
       setStatus('seq-status', '🖱 Repeat the sequence!', 'warn');
       return;
     }
-    const tile = document.querySelectorAll('.seq-tile')[seqSeq[i]];
-    tile.classList.add('lit');
+    document.querySelectorAll('.seq-tile')[seqSeq[i]].classList.add('lit');
     i++;
   }, speed);
 }
@@ -1186,19 +1032,28 @@ function seqClick(i) {
 // ══════════════════════════════════════════
 //  GAME 5 — CHIMP TEST
 // ══════════════════════════════════════════
+// FIX: separate newChimpGame() (resets lives) from startChimp() (resets level, called internally)
 let chLevel=1, chLives=3, chNums=[], chNext=1, chHidden=false;
+
+function newChimpGame() {
+  // Full reset — called by the Start button
+  chLevel = 1; chLives = 3;
+  document.getElementById('ch-level').textContent = chLevel;
+  document.getElementById('ch-lives').textContent = chLives;
+  startChimp();
+}
 
 function startChimp() {
   chHidden = false;
-  chNext = 1;
-  chNums = [];
-  const grid = document.getElementById('chimp-grid');
+  chNext   = 1;
+  chNums   = [];
+  const grid  = document.getElementById('chimp-grid');
   grid.innerHTML = '';
   const count = 3 + chLevel;
   document.getElementById('ch-count').textContent = count;
   document.getElementById('ch-lives').textContent = chLives;
   const positions = new Set();
-  while (positions.size < count) positions.add(rnd(0,24));
+  while (positions.size < count) positions.add(rnd(0, 24));
   let numIdx = 1;
   for (let i = 0; i < 25; i++) {
     const c = document.createElement('div');
@@ -1213,46 +1068,49 @@ function startChimp() {
     }
     grid.appendChild(c);
   }
-  // Hide after delay
   const hideDelay = Math.max(500, 1800 - chLevel*100);
   setStatus('ch-status', `Memorize the positions! Hiding in ${(hideDelay/1000).toFixed(1)}s`, 'warn');
   setTimeout(() => {
     chHidden = true;
-    document.querySelectorAll('.chimp-cell.active').forEach(c => { c.textContent=''; c.style.background='var(--surface2)'; });
-    setStatus('ch-status', `Click: 1 → ${count} in order`, 'info');
+    document.querySelectorAll('.chimp-cell.active').forEach(c => {
+      c.textContent = '';
+      c.style.background = 'var(--surface2)';
+    });
+    setStatus('ch-status', `Click 1 → ${count} in order`, 'info');
   }, hideDelay);
 }
+
 function chimpClick(n, cell) {
   if (!chHidden) return;
   if (n === chNext) {
     cell.classList.remove('active');
     cell.classList.add('done');
     cell.textContent = n;
+    cell.style.color  = 'var(--neon-green)';
     chNext++;
     if (chNext > chNums.length) {
       chLevel++;
       document.getElementById('ch-level').textContent = chLevel;
-      setStatus('ch-status', `🎉 Level ${chLevel-1} cleared! Loading level ${chLevel}...`, 'ok');
+      setStatus('ch-status', `🎉 Level ${chLevel-1} cleared! Loading level ${chLevel}…`, 'ok');
       setTimeout(startChimp, 1200);
     }
   } else {
     chLives--;
     document.getElementById('ch-lives').textContent = chLives;
     cell.classList.add('wrong');
-    // Show correct positions
+    // Reveal all numbers
     document.querySelectorAll('.chimp-cell').forEach(c => c.onclick = null);
-    chNums.forEach(({n:num, pos}) => {
+    chNums.forEach(({n: num, pos}) => {
       const c = document.getElementById('chimp-grid').children[pos];
-      c.textContent = num;
-      c.style.background = num === chNext ? 'var(--neon-pink)' : 'var(--surface2)';
-      c.style.color = 'var(--text)';
+      c.textContent       = num;
+      c.style.background  = num === chNext ? 'var(--neon-pink)' : 'var(--surface2)';
+      c.style.color       = 'var(--text)';
     });
     if (chLives <= 0) {
       setStatus('ch-status', `💀 Game Over! Reached level ${chLevel}. Press Start to retry.`, 'err');
-      chLevel = 1; chLives = 3;
-      document.getElementById('ch-level').textContent = 1;
+      // FIX: reset happens on next newChimpGame() call, not here
     } else {
-      setStatus('ch-status', `✗ Wrong! Lives left: ${chLives}. Restarting level...`, 'err');
+      setStatus('ch-status', `✗ Wrong! Lives left: ${chLives}. Restarting level…`, 'err');
       setTimeout(startChimp, 1500);
     }
   }
@@ -1260,56 +1118,56 @@ function chimpClick(n, cell) {
 
 // ══════════════════════════════════════════
 //  GAME 6 — ODD ONE OUT
+//  FIX: unique SVG filter IDs per element to avoid cross-shape conflicts
 // ══════════════════════════════════════════
-let oddLevel=1, oddScore=0, oddTarget=5, oddIdx=-1;
+let oddLevel=1, oddScore=0, oddTarget=5, oddIdx=-1, oddUid=0;
 
 function startOdd() {
-  document.getElementById('odd-level').textContent = oddLevel;
+  document.getElementById('odd-level').textContent  = oddLevel;
   document.getElementById('odd-target').textContent = oddTarget;
-  const grid = document.getElementById('odd-grid');
+  const grid  = document.getElementById('odd-grid');
   grid.innerHTML = '';
   const count = 4 + oddLevel * 2;
   oddIdx = rnd(0, count-1);
-  // Base color and odd color
   const palettes = ['#ff2d78','#00d4ff','#00ff9f','#ffe600','#bf5fff','#ff6b00'];
-  const base = pick(palettes);
-  const others = palettes.filter(p=>p!==base);
-  const oddColor = pick(others);
-  // Shapes: 0=circle, 1=square, 2=diamond, 3=triangle
+  const base     = pick(palettes);
+  const oddColor = pick(palettes.filter(p => p !== base));
   const baseShape = rnd(0,3);
-  const oddShape = (baseShape + 1 + rnd(0,2)) % 4;
-  // Determine difference type based on level
-  const diffType = oddLevel <= 2 ? 'color' : oddLevel <= 4 ? (Math.random()<0.5?'color':'shape') : 'both';
+  const oddShape  = (baseShape + 1 + rnd(0,2)) % 4;
+  const diffType  = oddLevel <= 2 ? 'color' : oddLevel <= 4 ? (Math.random()<0.5?'color':'shape') : 'both';
   for (let i = 0; i < count; i++) {
-    const el = document.createElement('div');
+    const el   = document.createElement('div');
     el.className = 'odd-item';
     const isOdd = i === oddIdx;
     const color = isOdd && (diffType==='color'||diffType==='both') ? oddColor : base;
     const shape = isOdd && (diffType==='shape'||diffType==='both') ? oddShape : baseShape;
-    el.innerHTML = makeSVGShape(shape, color, 52);
+    el.innerHTML = makeSVGShape(shape, color, 52, oddUid++);
     el.onclick = () => oddClick(i);
     grid.appendChild(el);
   }
   setStatus('odd-status', `Level ${oddLevel} — find the different one`, 'info');
 }
-function makeSVGShape(type, color, size) {
+
+// FIX: uid param ensures every filter element has a globally unique id
+function makeSVGShape(type, color, size, uid) {
   const s = size, h = s/2;
-  const glow = color;
+  const fid = `glow-${uid}`;
   let path;
-  if (type===0) path = `<circle cx="${h}" cy="${h}" r="${h-3}" fill="${color}" filter="url(#glow)"/>`;
-  else if (type===1) path = `<rect x="3" y="3" width="${s-6}" height="${s-6}" rx="4" fill="${color}" filter="url(#glow)"/>`;
-  else if (type===2) path = `<polygon points="${h},3 ${s-3},${h} ${h},${s-3} 3,${h}" fill="${color}" filter="url(#glow)"/>`;
-  else path = `<polygon points="${h},3 ${s-3},${s-3} 3,${s-3}" fill="${color}" filter="url(#glow)"/>`;
+  if      (type===0) path = `<circle cx="${h}" cy="${h}" r="${h-3}" fill="${color}" filter="url(#${fid})"/>`;
+  else if (type===1) path = `<rect x="3" y="3" width="${s-6}" height="${s-6}" rx="4" fill="${color}" filter="url(#${fid})"/>`;
+  else if (type===2) path = `<polygon points="${h},3 ${s-3},${h} ${h},${s-3} 3,${h}" fill="${color}" filter="url(#${fid})"/>`;
+  else               path = `<polygon points="${h},3 ${s-3},${s-3} 3,${s-3}" fill="${color}" filter="url(#${fid})"/>`;
   return `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">
-    <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="cb"/><feComposite in="SourceGraphic" in2="cb" operator="over"/></filter></defs>
+    <defs><filter id="${fid}"><feGaussianBlur stdDeviation="2" result="cb"/><feComposite in="SourceGraphic" in2="cb" operator="over"/></filter></defs>
     ${path}</svg>`;
 }
+
 function oddClick(i) {
   if (i === oddIdx) {
     oddScore++;
     document.getElementById('odd-score').textContent = oddScore;
     if (oddScore >= oddTarget) {
-      oddLevel++; oddScore=0; oddTarget = 5+oddLevel;
+      oddLevel++; oddScore = 0; oddTarget = 5 + oddLevel;
       setStatus('odd-status', `🎉 Level up → ${oddLevel}!`, 'warn');
       setTimeout(startOdd, 700);
     } else {
@@ -1318,7 +1176,6 @@ function oddClick(i) {
     }
   } else {
     setStatus('odd-status', '✗ Wrong — try again!', 'err');
-    // Briefly highlight wrong choice
     document.getElementById('odd-grid').children[i].style.opacity = '0.3';
     setTimeout(() => { document.getElementById('odd-grid').children[i].style.opacity = '1'; }, 500);
   }
@@ -1326,53 +1183,65 @@ function oddClick(i) {
 
 // ══════════════════════════════════════════
 //  GAME 7 — N-BACK
+//  FIX 1: level-up uses a clean per-level correct counter
+//  FIX 2: missed-match penalty uses correct index (prev step vs N-back of prev step)
 // ══════════════════════════════════════════
-let nbN=1, nbSeq=[], nbCurrent=-1, nbRunning=false, nbTimer, nbScore=0, nbHits=0, nbErrors=0;
-let nbAnswered = false;
+let nbN=1, nbSeq=[], nbCurrent=-1, nbRunning=false, nbTimer;
+let nbScore=0, nbHits=0, nbErrors=0;
+let nbAnswered=false, nbCorrectThisLevel=0;
+const NB_LEVEL_UP_THRESHOLD = 15;
 
 function startNBack() {
-  nbN = 1; nbSeq=[]; nbScore=0; nbHits=0; nbErrors=0;
-  document.getElementById('nb-n').textContent = nbN;
-  document.getElementById('nb-score').textContent=0;
-  document.getElementById('nb-hits').textContent=0;
-  document.getElementById('nb-errors').textContent=0;
+  nbN=1; nbSeq=[]; nbScore=0; nbHits=0; nbErrors=0;
+  nbAnswered=false; nbCorrectThisLevel=0;
+  document.getElementById('nb-n').textContent     = nbN;
+  document.getElementById('nb-score').textContent = 0;
+  document.getElementById('nb-hits').textContent  = 0;
+  document.getElementById('nb-errors').textContent= 0;
   nbRunning = true;
   setStatus('nb-status', `N=${nbN}: Is current position same as ${nbN} step(s) ago?`, 'info');
   nbTick();
 }
+
 function stopNBack() {
-  nbRunning = false; clearTimeout(nbTimer);
-  ['nb-match-btn','nb-nomatch-btn'].forEach(id => document.getElementById(id).disabled=true);
+  nbRunning = false;
+  clearTimeout(nbTimer);
+  document.querySelectorAll('.nback-cell').forEach(c => c.classList.remove('lit'));
+  document.getElementById('nb-match-btn').disabled   = true;
+  document.getElementById('nb-nomatch-btn').disabled = true;
   setStatus('nb-status', `Stopped. Score: ${nbScore}`, 'info');
 }
+
 function nbTick() {
   if (!nbRunning) return;
-  // Clear previous highlight
-  document.querySelectorAll('.nback-cell').forEach(c=>c.classList.remove('lit'));
-  // Check if previous answer was needed but not given
+  document.querySelectorAll('.nback-cell').forEach(c => c.classList.remove('lit'));
+
+  // FIX: penalty for unanswered steps that *were* a match
+  // Check if the step we're leaving (nbSeq.length-1, before new push) was a match
   if (nbSeq.length > nbN && !nbAnswered) {
-    const wasMatch = nbSeq[nbSeq.length-1-nbN] === nbSeq[nbSeq.length-2];
-    if (wasMatch) { nbErrors++; document.getElementById('nb-errors').textContent=nbErrors; }
+    const prevIdx = nbSeq.length - 1;
+    const wasMatch = nbSeq[prevIdx] === nbSeq[prevIdx - nbN];
+    if (wasMatch) {
+      nbErrors++;
+      document.getElementById('nb-errors').textContent = nbErrors;
+    }
   }
+
   nbAnswered = false;
-  nbCurrent = rnd(0,8);
+  nbCurrent  = rnd(0, 8);
   nbSeq.push(nbCurrent);
   document.getElementById('nb' + nbCurrent).classList.add('lit');
   const canAnswer = nbSeq.length > nbN;
-  document.getElementById('nb-match-btn').disabled = !canAnswer;
+  document.getElementById('nb-match-btn').disabled   = !canAnswer;
   document.getElementById('nb-nomatch-btn').disabled = !canAnswer;
+
   const speed = Math.max(1200, 2500 - nbN*200);
   nbTimer = setTimeout(() => {
-    document.getElementById('nb'+nbCurrent).classList.remove('lit');
+    document.getElementById('nb' + nbCurrent).classList.remove('lit');
     nbTimer = setTimeout(nbTick, 400);
   }, speed);
-  // Level up N after 20 correct
-  if (nbScore > 0 && nbScore % 15 === 0 && nbSeq.length % 15 === 0) {
-    nbN = Math.min(nbN+1, 5);
-    document.getElementById('nb-n').textContent = nbN;
-    setStatus('nb-status', `⬆️ N increased to ${nbN}!`, 'warn');
-  }
 }
+
 function nbAnswer(isMatch) {
   if (!nbRunning || nbSeq.length <= nbN) return;
   nbAnswered = true;
@@ -1384,11 +1253,18 @@ function nbAnswer(isMatch) {
   pressedBtn.classList.add('pressed');
   setTimeout(() => pressedBtn.classList.remove('pressed'), 300);
   if (correct) {
-    nbScore++;
+    nbScore++; nbCorrectThisLevel++;
     if (isMatch) nbHits++;
     document.getElementById('nb-score').textContent = nbScore;
-    document.getElementById('nb-hits').textContent = nbHits;
-    setStatus('nb-status', '✓ Correct!', 'ok');
+    document.getElementById('nb-hits').textContent  = nbHits;
+    // FIX: level up by clean counter, reset on each N increase
+    if (nbCorrectThisLevel >= NB_LEVEL_UP_THRESHOLD && nbN < 5) {
+      nbN++; nbCorrectThisLevel = 0;
+      document.getElementById('nb-n').textContent = nbN;
+      setStatus('nb-status', `⬆️ N increased to ${nbN}! (${NB_LEVEL_UP_THRESHOLD} correct)`, 'warn');
+    } else {
+      setStatus('nb-status', '✓ Correct!', 'ok');
+    }
   } else {
     nbErrors++;
     document.getElementById('nb-errors').textContent = nbErrors;
@@ -1405,17 +1281,17 @@ const TYPING_SETS = [
   ["beyond the hazy blue mountains lie forgotten kingdoms full of mystery","a journey of a thousand miles begins with a single step forward","we hold these truths to be self-evident that all minds are created equal"],
   ["pack my box: 12 jugs of liquid wax! 5 more dozen?","42 foxes jumped over 17 lazy dogs at exactly 3:00 AM","In 2025, AI systems processed 98.7% of tasks with remarkable speed"],
 ];
-let tpLevel=1, tpBest=0, tpTarget='', tpTyped=0, tpStart=null, tpErrors=0, tpRunning=false;
+let tpLevel=1, tpBest=0, tpTarget='', tpStart=null, tpErrors=0, tpRunning=false;
 
 function startTyping() {
-  tpLevel = 1; tpErrors=0;
+  tpLevel = 1; tpErrors = 0;
   document.getElementById('tp-level').textContent = tpLevel;
   loadTypingPrompt();
 }
 function loadTypingPrompt() {
   const pool = TYPING_SETS[Math.min(tpLevel-1, TYPING_SETS.length-1)];
-  tpTarget = pick(pool);
-  tpTyped = 0; tpStart = null; tpErrors = 0; tpRunning = true;
+  tpTarget   = pick(pool);
+  tpStart    = null; tpErrors = 0; tpRunning = true;
   renderTyping();
   const inp = document.getElementById('typing-input');
   inp.value = ''; inp.disabled = false; inp.focus();
@@ -1425,13 +1301,12 @@ function loadTypingPrompt() {
   document.getElementById('tp-acc').textContent = '—';
 }
 function renderTyping() {
-  const el = document.getElementById('typing-target');
-  el.innerHTML = tpTarget.split('').map((ch, i) => {
-    const typed = document.getElementById('typing-input').value;
+  const typed = document.getElementById('typing-input').value;
+  document.getElementById('typing-target').innerHTML = tpTarget.split('').map((ch, i) => {
     let cls = 'char-pending';
     if (i < typed.length) cls = typed[i] === ch ? 'char-done' : 'char-wrong';
     const cursor = i === typed.length ? ' char-cursor' : '';
-    return `<span class="${cls}${cursor}">${ch==' '?'&nbsp;':ch}</span>`;
+    return `<span class="${cls}${cursor}">${ch===' '?'&nbsp;':ch}</span>`;
   }).join('');
 }
 function handleTyping() {
@@ -1440,20 +1315,17 @@ function handleTyping() {
   const val = inp.value;
   if (!tpStart) tpStart = Date.now();
   renderTyping();
-  // Count errors
   tpErrors = 0;
-  for (let i=0; i<Math.min(val.length,tpTarget.length); i++) {
+  for (let i = 0; i < Math.min(val.length, tpTarget.length); i++) {
     if (val[i] !== tpTarget[i]) tpErrors++;
   }
   const progress = Math.min(val.length / tpTarget.length * 100, 100);
   document.getElementById('tp-bar').style.width = progress + '%';
-  // WPM
   const elapsed = (Date.now() - tpStart) / 60000;
   const wpm = elapsed > 0 ? Math.round((val.length/5) / elapsed) : 0;
   document.getElementById('tp-wpm').textContent = wpm;
   const acc = val.length > 0 ? Math.round((1 - tpErrors/val.length)*100) : 100;
   document.getElementById('tp-acc').textContent = acc + '%';
-  // Completion
   if (val === tpTarget) {
     tpRunning = false;
     inp.disabled = true;
@@ -1473,12 +1345,13 @@ function handleTyping() {
 //  GAME 9 — COLOR MATCH
 // ══════════════════════════════════════════
 const CM_COLORS = {
-  'RED': '#ff2d78','BLUE': '#00d4ff','GREEN':'#00ff9f',
+  'RED':'#ff2d78','BLUE':'#00d4ff','GREEN':'#00ff9f',
   'YELLOW':'#ffe600','PURPLE':'#bf5fff','ORANGE':'#ff6b00'
 };
 const CM_COLOR_NAMES = Object.keys(CM_COLORS);
-let cmLevel=1, cmScore=0, cmStreak=0, cmCorrect, cmRunning=false, cmBarT, cmRule;
-const CM_RULES = ['WORD=BOX?', 'WORD=BOX?', 'WORD≠BOX?', 'RANDOM'];
+let cmLevel=1, cmScore=0, cmStreak=0, cmCorrect, cmRunning=false, cmBarT;
+// Rules per level: 1=same?, 2=same?, 3=different?, 4=random per round
+const CM_RULES = ['SAME?', 'SAME?', 'DIFF?', 'RANDOM'];
 
 function startColorMatch() {
   cmRunning=true; cmScore=0; cmStreak=0;
@@ -1488,42 +1361,39 @@ function startColorMatch() {
 function generateColorMatch() {
   if (!cmRunning) return;
   clearTimeout(cmBarT);
-  cmRule = CM_RULES[Math.min(cmLevel-1, CM_RULES.length-1)];
-  const word = pick(CM_COLOR_NAMES);
-  const textColor = CM_COLORS[word];
-  const boxColorName = cmLevel<=1 ? word : pick(CM_COLOR_NAMES);
-  const boxColor = CM_COLORS[boxColorName];
-  // Determine correct answer based on rule
-  if (cmRule === 'WORD=BOX?') {
-    cmCorrect = word === boxColorName;
-    document.getElementById('cm-rule-label').textContent = '⚖ RULE: Does TEXT color = BOX color?';
-    document.getElementById('cm-rule-label').className = 'cm-rule-match';
-  } else if (cmRule === 'WORD≠BOX?') {
-    cmCorrect = word !== boxColorName;
-    document.getElementById('cm-rule-label').textContent = '⚖ RULE: Does TEXT color ≠ BOX color?';
-    document.getElementById('cm-rule-label').className = 'cm-rule-color';
+  const ruleKey    = CM_RULES[Math.min(cmLevel-1, CM_RULES.length-1)];
+  const word       = pick(CM_COLOR_NAMES);
+  const textColor  = CM_COLORS[word];
+  const boxName    = cmLevel <= 1 ? word : pick(CM_COLOR_NAMES);
+  const boxColor   = CM_COLORS[boxName];
+  const rl = document.getElementById('cm-rule-label');
+  let effectiveRule;
+  if (ruleKey === 'SAME?')   effectiveRule = 'SAME?';
+  else if (ruleKey === 'DIFF?') effectiveRule = 'DIFF?';
+  else effectiveRule = Math.random() < 0.5 ? 'SAME?' : 'DIFF?';   // random
+  cmCorrect = effectiveRule === 'SAME?' ? word === boxName : word !== boxName;
+  if (effectiveRule === 'SAME?') {
+    rl.textContent = '⚖ RULE: TEXT color = BOX color?';
+    rl.className   = 'cm-rule-match';
   } else {
-    // Random rule per round
-    const flip = Math.random()<0.5;
-    cmCorrect = flip ? word===boxColorName : word!==boxColorName;
-    document.getElementById('cm-rule-label').textContent = flip ? '⚖ RULE: SAME color?' : '⚖ RULE: DIFFERENT color?';
-    document.getElementById('cm-rule-label').className = 'cm-rule-both';
+    rl.textContent = '⚖ RULE: TEXT color ≠ BOX color?';
+    rl.className   = ruleKey === 'RANDOM' ? 'cm-rule-both' : 'cm-rule-color';
   }
   const el = document.getElementById('cm-display');
   el.textContent = word;
   el.style.color = textColor;
   const wrap = document.getElementById('cm-display-wrap');
-  wrap.style.background = boxColor + '22';
-  wrap.style.borderColor = boxColor;
+  wrap.style.background   = boxColor + '22';
+  wrap.style.borderColor  = boxColor;
   setStatus('cm-status', '', 'info');
-  // Timer
   const t = Math.max(1500, 4000 - cmLevel*300);
   const bar = document.getElementById('cm-bar');
-  bar.style.transition='none'; bar.style.width='100%'; bar.offsetHeight;
-  bar.style.transition=`width ${t}ms linear`; bar.style.width='0%';
+  bar.style.transition = 'none'; bar.style.width = '100%'; bar.offsetHeight;
+  bar.style.transition = `width ${t}ms linear`; bar.style.width = '0%';
   cmBarT = setTimeout(() => {
-    cmStreak=0; document.getElementById('cm-streak').textContent=0;
-    setStatus('cm-status','⏱ Too slow!','err');
+    cmStreak = 0;
+    document.getElementById('cm-streak').textContent = 0;
+    setStatus('cm-status', '⏱ Too slow!', 'err');
     setTimeout(generateColorMatch, 600);
   }, t);
 }
@@ -1533,17 +1403,19 @@ function cmAnswer(yes) {
   const isCorrect = yes === cmCorrect;
   if (isCorrect) {
     cmScore++; cmStreak++;
-    document.getElementById('cm-score').textContent = cmScore;
+    document.getElementById('cm-score').textContent  = cmScore;
     document.getElementById('cm-streak').textContent = cmStreak;
-    if (cmStreak % 8===0 && cmLevel<4) {
-      cmLevel++; document.getElementById('cm-level').textContent=cmLevel;
-      setStatus('cm-status',`🎉 Level up → ${cmLevel}!`,'warn');
+    if (cmStreak % 8 === 0 && cmLevel < 4) {
+      cmLevel++;
+      document.getElementById('cm-level').textContent = cmLevel;
+      setStatus('cm-status', `🎉 Level up → ${cmLevel}!`, 'warn');
     } else {
-      setStatus('cm-status','✓ Correct!','ok');
+      setStatus('cm-status', '✓ Correct!', 'ok');
     }
   } else {
-    cmStreak=0; document.getElementById('cm-streak').textContent=0;
-    setStatus('cm-status',`✗ Wrong — answer was ${cmCorrect?'YES':'NO'}`,'err');
+    cmStreak = 0;
+    document.getElementById('cm-streak').textContent = 0;
+    setStatus('cm-status', `✗ Wrong — answer was ${cmCorrect?'YES':'NO'}`, 'err');
   }
   setTimeout(generateColorMatch, 700);
 }
@@ -1552,60 +1424,62 @@ function cmAnswer(yes) {
 //  GAME 10 — WORD CATEGORY SORT
 // ══════════════════════════════════════════
 const CATEGORIES = {
-  Animals: ['Dog','Cat','Eagle','Whale','Tiger','Elephant','Penguin','Dolphin','Wolf','Fox','Shark','Lion','Gorilla','Parrot','Cobra'],
-  Fruits:  ['Apple','Mango','Kiwi','Peach','Grape','Lemon','Berry','Cherry','Melon','Plum','Guava','Papaya','Fig','Date','Lime'],
-  Countries:['France','Japan','Brazil','Canada','Egypt','India','Mexico','Italy','Spain','China','Peru','Ghana','Chile','Vietnam','Greece'],
-  Sports:  ['Soccer','Tennis','Hockey','Boxing','Rugby','Swimming','Cricket','Golf','Cycling','Archery','Fencing','Judo','Rowing','Volleyball','Badminton'],
-  Colors:  ['Crimson','Azure','Ivory','Teal','Scarlet','Indigo','Amber','Maroon','Cyan','Violet','Ochre','Jade','Mauve','Coral','Umber'],
-  Science: ['Photon','Neuron','Genome','Plasma','Osmosis','Catalyst','Entropy','Isotope','Polymer','Quantum','Nebula','Fission','Allele','Valence','Epoch'],
+  Animals:   ['Dog','Cat','Eagle','Whale','Tiger','Elephant','Penguin','Dolphin','Wolf','Fox','Shark','Lion','Gorilla','Parrot','Cobra'],
+  Fruits:    ['Apple','Mango','Kiwi','Peach','Grape','Lemon','Berry','Cherry','Melon','Plum','Guava','Papaya','Fig','Date','Lime'],
+  Countries: ['France','Japan','Brazil','Canada','Egypt','India','Mexico','Italy','Spain','China','Peru','Ghana','Chile','Vietnam','Greece'],
+  Sports:    ['Soccer','Tennis','Hockey','Boxing','Rugby','Swimming','Cricket','Golf','Cycling','Archery','Fencing','Judo','Rowing','Volleyball','Badminton'],
+  Colors:    ['Crimson','Azure','Ivory','Teal','Scarlet','Indigo','Amber','Maroon','Cyan','Violet','Ochre','Jade','Mauve','Coral','Umber'],
+  Science:   ['Photon','Neuron','Genome','Plasma','Osmosis','Catalyst','Entropy','Isotope','Polymer','Quantum','Nebula','Fission','Allele','Valence','Epoch'],
 };
 const CAT_NAMES = Object.keys(CATEGORIES);
-let csLevel=1, csScore=0, csStreak=0, csActiveCats=[], csCurrentWord='', csCurrentCat='';
+let csLevel=1, csScore=0, csStreak=0, csActiveCats=[], csCurrentCat='';
 
 function startWordSort() {
   csLevel=1; csScore=0; csStreak=0;
-  document.getElementById('cs-level').textContent=1;
-  document.getElementById('cs-score').textContent=0;
-  document.getElementById('cs-streak').textContent=0;
+  document.getElementById('cs-level').textContent  = 1;
+  document.getElementById('cs-score').textContent  = 0;
+  document.getElementById('cs-streak').textContent = 0;
   nextWordSort();
 }
 function nextWordSort() {
   const numCats = Math.min(2 + csLevel, 6);
-  csActiveCats = [...CAT_NAMES].sort(()=>Math.random()-0.5).slice(0, numCats);
-  csCurrentCat = pick(csActiveCats);
-  const wordPool = CATEGORIES[csCurrentCat];
-  csCurrentWord = pick(wordPool);
-  document.getElementById('cs-item').innerHTML = `<div class="item-tag">${csCurrentWord}</div>`;
+  csActiveCats  = [...CAT_NAMES].sort(()=>Math.random()-0.5).slice(0, numCats);
+  csCurrentCat  = pick(csActiveCats);
+  const word    = pick(CATEGORIES[csCurrentCat]);
+  document.getElementById('cs-item').innerHTML = `<div class="item-tag">${word}</div>`;
   const catsEl = document.getElementById('cs-cats');
   catsEl.innerHTML = '';
   csActiveCats.forEach(cat => {
     const b = document.createElement('button');
     b.className = 'cs-cat-btn';
     b.textContent = cat;
-    b.onclick = () => checkWordSort(cat, b);
+    b.onclick = () => checkWordSort(cat, word, b);
     catsEl.appendChild(b);
   });
-  setStatus('cs-status', `Which category does "${csCurrentWord}" belong to?`, 'info');
+  setStatus('cs-status', `Which category does "${word}" belong to?`, 'info');
 }
-function checkWordSort(chosen, btn) {
+function checkWordSort(chosen, word, btn) {
   const isCorrect = chosen === csCurrentCat;
   btn.classList.add(isCorrect ? 'correct' : 'wrong');
   if (!isCorrect) {
-    // Highlight correct
-    document.querySelectorAll('.cs-cat-btn').forEach(b => { if (b.textContent===csCurrentCat) b.classList.add('correct'); });
+    document.querySelectorAll('.cs-cat-btn').forEach(b => { if (b.textContent === csCurrentCat) b.classList.add('correct'); });
   }
-  document.querySelectorAll('.cs-cat-btn').forEach(b => b.onclick=null);
+  document.querySelectorAll('.cs-cat-btn').forEach(b => b.onclick = null);
   if (isCorrect) {
     csScore++; csStreak++;
-    document.getElementById('cs-score').textContent=csScore;
-    document.getElementById('cs-streak').textContent=csStreak;
-    if (csStreak % 7===0 && csLevel<5) {
-      csLevel++; document.getElementById('cs-level').textContent=csLevel;
-      setStatus('cs-status',`🎉 Level up → ${csLevel}! More categories now.`,'warn');
-    } else setStatus('cs-status','✓ Correct!','ok');
+    document.getElementById('cs-score').textContent  = csScore;
+    document.getElementById('cs-streak').textContent = csStreak;
+    if (csStreak % 7 === 0 && csLevel < 5) {
+      csLevel++;
+      document.getElementById('cs-level').textContent = csLevel;
+      setStatus('cs-status', `🎉 Level up → ${csLevel}! More categories now.`, 'warn');
+    } else {
+      setStatus('cs-status', '✓ Correct!', 'ok');
+    }
   } else {
-    csStreak=0; document.getElementById('cs-streak').textContent=0;
-    setStatus('cs-status',`✗ "${csCurrentWord}" is a ${csCurrentCat}`,'err');
+    csStreak = 0;
+    document.getElementById('cs-streak').textContent = 0;
+    setStatus('cs-status', `✗ "${word}" is a ${csCurrentCat}`, 'err');
   }
   setTimeout(nextWordSort, 900);
 }
