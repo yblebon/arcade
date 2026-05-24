@@ -4,6 +4,124 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEURAL ARCADE — Brain Training</title>
+<style>
+  /* ── GAME 11: CRAB BAG (shuffle / avoid) ── */
+  #cb-stage {
+    position: relative;
+    height: 180px;
+    margin: 18px 0 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #cb-stage::before {
+    /* table-top stripe */
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 38px;
+    background: linear-gradient(180deg, rgba(0,212,255,0.04), rgba(0,212,255,0.10));
+    border-top: 1px solid rgba(0,212,255,0.25);
+  }
+  .cb-bag {
+    position: absolute;
+    bottom: 14px;
+    width: 78px;
+    height: 100px;
+    cursor: pointer;
+    transition: left 0.42s cubic-bezier(.65,.05,.35,1), transform 0.25s, filter 0.25s;
+    user-select: none;
+    transform-origin: 50% 100%;
+  }
+  .cb-bag.locked { cursor: not-allowed; }
+  .cb-bag-sack {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 82px;
+    background:
+      radial-gradient(ellipse at 30% 30%, #c08a55 0%, #8b5a2b 45%, #5a3614 100%);
+    border: 2px solid #3a210d;
+    border-radius: 38px 38px 14px 14px / 30px 30px 14px 14px;
+    box-shadow:
+      inset -8px -4px 14px rgba(0,0,0,0.45),
+      inset 6px 6px 12px rgba(255,210,150,0.18),
+      0 6px 14px rgba(0,0,0,0.5);
+  }
+  /* sack fabric folds */
+  .cb-bag-sack::before {
+    content: '';
+    position: absolute;
+    inset: 14% 24% 30% 24%;
+    background:
+      repeating-linear-gradient(96deg, transparent 0 6px, rgba(0,0,0,0.06) 6px 8px),
+      repeating-linear-gradient(84deg, transparent 0 6px, rgba(255,255,255,0.04) 6px 8px);
+    border-radius: 40%;
+    pointer-events: none;
+  }
+  /* tied rope at the neck */
+  .cb-bag-tie {
+    position: absolute;
+    top: 18px; left: 12%; right: 12%;
+    height: 10px;
+    background: linear-gradient(180deg, #5a3614, #2a1607);
+    border-radius: 8px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+    z-index: 3;
+  }
+  .cb-bag-tie::after {
+    content: '';
+    position: absolute;
+    top: -6px; left: 50%;
+    width: 16px; height: 16px;
+    transform: translateX(-50%) rotate(45deg);
+    background: #5a3614;
+    border-radius: 3px;
+  }
+  /* crab pops out from inside the sack */
+  .cb-bag-crab {
+    position: absolute;
+    top: -6px; left: 50%;
+    font-size: 38px;
+    transform: translate(-50%, 6px) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+    filter: drop-shadow(0 0 8px rgba(255,107,0,0.6));
+    z-index: 2;
+  }
+  .cb-bag.revealed.has-crab .cb-bag-crab,
+  .cb-bag.busted .cb-bag-crab {
+    transform: translate(-50%, -24px) scale(1);
+    opacity: 1;
+  }
+  .cb-bag.busted .cb-bag-crab { animation: crabWiggle 0.6s ease-in-out infinite; }
+  @keyframes crabWiggle {
+    0%,100% { transform: translate(-50%, -24px) scale(1) rotate(-12deg); }
+    50%     { transform: translate(-50%, -28px) scale(1.05) rotate(12deg); }
+  }
+  .cb-bag.shuffling { z-index: 5; }
+  .cb-bag:not(.locked):hover { transform: translateY(-6px); filter: brightness(1.15); }
+  .cb-bag.safe-pick { animation: bagPop 0.5s ease; }
+  .cb-bag.safe-pick .cb-bag-sack { box-shadow: 0 0 24px var(--neon-green), inset -8px -4px 14px rgba(0,0,0,0.45); }
+  .cb-bag.busted .cb-bag-sack    { box-shadow: 0 0 24px var(--neon-pink),  inset -8px -4px 14px rgba(0,0,0,0.45); animation: bagShake 0.4s; }
+  .cb-bag.dimmed { opacity: 0.35; filter: grayscale(0.6); }
+  @keyframes bagPop   { 0%{transform:translateY(0)} 40%{transform:translateY(-22px) scale(1.08)} 100%{transform:translateY(0)} }
+  @keyframes bagShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+  #cb-phase-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--text-dim);
+    margin: 4px 0 8px;
+  }
+  #cb-phase-label.reveal  { color: var(--neon-pink); }
+  #cb-phase-label.shuffle { color: var(--neon-yellow); }
+  #cb-phase-label.pick    { color: var(--neon-green); }
+</style>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -355,7 +473,7 @@
 
 <header>
   <h1>◈ NEURAL ARCADE ◈</h1>
-  <p>11 cognitive training games // sharpen your mind</p>
+  <p>12 cognitive training games // sharpen your mind</p>
 </header>
 
 <nav id="nav">
@@ -370,6 +488,7 @@
   <div class="tab" onclick="showGame(8)">⌨️ TYPING</div>
   <div class="tab" onclick="showGame(9)">🎯 COLOR MATCH</div>
   <div class="tab" onclick="showGame(10)">📚 WORD SORT</div>
+  <div class="tab" onclick="showGame(11)">🦀 CRAB BAG</div>
 </nav>
 
 <main>
@@ -591,6 +710,24 @@
     <div class="cs-cats" id="cs-cats"></div>
     <div class="status" id="cs-status">Categorize each word as fast as you can</div>
     <button class="btn btn-primary" style="background:var(--neon-orange);color:white;" onclick="startWordSort()">START</button>
+  </div>
+</div>
+
+<!-- ─── GAME 11: CRAB BAG ─── -->
+<div class="game-panel" id="p11">
+  <div class="card pink">
+    <div class="game-title pink">🦀 CRAB BAG</div>
+    <div class="game-desc">Watch which bag(s) hide the crab. After the shuffle, pick a SAFE bag — avoid the crab! Higher levels add more bags, more crabs, faster shuffles.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val pink" id="cb-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val green" id="cb-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val" id="cb-streak">0</span></div>
+      <div class="hud-item">LIVES <span class="hud-val pink" id="cb-lives">3</span></div>
+    </div>
+    <div id="cb-phase-label">PRESS START</div>
+    <div id="cb-stage"></div>
+    <div class="status" id="cb-status">Track the crab. Pick a clean bag to survive.</div>
+    <button class="btn btn-primary" style="background:var(--neon-pink);color:white;" onclick="newCrabGame()">START</button>
   </div>
 </div>
 
@@ -1482,6 +1619,169 @@ function checkWordSort(chosen, word, btn) {
     setStatus('cs-status', `✗ "${word}" is a ${csCurrentCat}`, 'err');
   }
   setTimeout(nextWordSort, 900);
+}
+
+// ══════════════════════════════════════════
+//  GAME 11 — CRAB BAG  (shell-game inverted)
+// ══════════════════════════════════════════
+/*
+  Level scaling:
+    bags  = 3 + floor((L-1)/2)   →  3,3,4,4,5,5,6,6...
+    crabs = 1 + floor((L-1)/3)   →  1,1,1,2,2,2,3,3,3...
+    (clamped to bags-1)
+    reveal time = max(900, 2200 - L*120)
+    shuffles    = 4 + L*2
+    swap speed  = max(180, 520 - L*30)
+  3 lives. Pick a SAFE bag to score.
+*/
+let cbLevel=1, cbScore=0, cbStreak=0, cbLives=3;
+let cbBags=[], cbSlots=[], cbPhase='idle', cbBusy=false;
+
+function newCrabGame() {
+  cbLevel=1; cbScore=0; cbStreak=0; cbLives=3;
+  cbUpdateHud();
+  nextCrabRound();
+}
+function cbUpdateHud() {
+  document.getElementById('cb-level').textContent  = cbLevel;
+  document.getElementById('cb-score').textContent  = cbScore;
+  document.getElementById('cb-streak').textContent = cbStreak;
+  document.getElementById('cb-lives').textContent  = cbLives;
+}
+function cbSetPhase(text, cls) {
+  const el = document.getElementById('cb-phase-label');
+  el.textContent = text;
+  el.className   = cls || '';
+}
+function cbSlotX(slot, total, stageW) {
+  const bagW = 78;
+  const usable = stageW - bagW;
+  if (total === 1) return (stageW - bagW) / 2;
+  return Math.round(usable * (slot / (total - 1)));
+}
+
+function nextCrabRound() {
+  cbBusy = true;
+  const stage = document.getElementById('cb-stage');
+  stage.innerHTML = '';
+  cbBags = []; cbSlots = [];
+  const numBags  = Math.min(3 + Math.floor((cbLevel-1)/2), 7);
+  const numCrabs = Math.min(1 + Math.floor((cbLevel-1)/3), numBags - 1);
+  const stageW   = stage.clientWidth || stage.getBoundingClientRect().width || 600;
+  // crab positions
+  const crabSet = new Set();
+  while (crabSet.size < numCrabs) crabSet.add(rnd(0, numBags-1));
+  // build bags
+  for (let i = 0; i < numBags; i++) {
+    const el = document.createElement('div');
+    el.className = 'cb-bag locked' + (crabSet.has(i) ? ' has-crab revealed' : '');
+    el.innerHTML =
+      '<div class="cb-bag-crab">🦀</div>' +
+      '<div class="cb-bag-sack"><div class="cb-bag-tie"></div></div>';
+    el.style.left = cbSlotX(i, numBags, stageW) + 'px';
+    el.dataset.slot = i;
+    el.onclick = () => cbPick(el);
+    stage.appendChild(el);
+    cbBags.push(el);
+    cbSlots.push(el); // slot index → element
+  }
+  cbUpdateHud();
+  cbSetPhase(`Level ${cbLevel} · ${numCrabs} crab${numCrabs>1?'s':''} in ${numBags} bags · MEMORIZE`, 'reveal');
+  setStatus('cb-status', '👀 Watch where the crab is hiding...', 'warn');
+  // reveal phase
+  const revealMs = Math.max(900, 2200 - cbLevel*120);
+  setTimeout(() => {
+    // close the bags
+    cbBags.forEach(b => b.classList.remove('revealed'));
+    cbSetPhase('SHUFFLING — keep your eyes on the bag', 'shuffle');
+    setStatus('cb-status', '🌀 Track it!', 'info');
+    const shuffleCount = 4 + cbLevel*2;
+    const swapMs = Math.max(180, 520 - cbLevel*30);
+    cbShuffleSequence(shuffleCount, swapMs, stageW, numBags);
+  }, revealMs);
+}
+
+function cbShuffleSequence(remaining, swapMs, stageW, numBags) {
+  if (remaining <= 0) {
+    // unlock for pick
+    cbBags.forEach(b => b.classList.remove('locked'));
+    cbBusy = false;
+    cbSetPhase('PICK A SAFE BAG', 'pick');
+    setStatus('cb-status', '🤔 Choose carefully — avoid the crab!', 'info');
+    return;
+  }
+  // pick two distinct slots and swap
+  const a = rnd(0, numBags - 1);
+  let b = rnd(0, numBags - 1);
+  while (b === a) b = rnd(0, numBags - 1);
+  const bagA = cbSlots[a];
+  const bagB = cbSlots[b];
+  // set transition speed for this swap
+  [bagA, bagB].forEach(el => {
+    el.classList.add('shuffling');
+    el.style.transition = `left ${swapMs}ms cubic-bezier(.65,.05,.35,1), transform 0.25s, filter 0.25s`;
+  });
+  // swap positions
+  bagA.style.left = cbSlotX(b, numBags, stageW) + 'px';
+  bagB.style.left = cbSlotX(a, numBags, stageW) + 'px';
+  // tiny arc to make swap readable: lift one bag, dip the other
+  bagA.style.transform = 'translateY(-30px)';
+  bagB.style.transform = 'translateY(12px)';
+  // swap slot mapping
+  cbSlots[a] = bagB;
+  cbSlots[b] = bagA;
+  bagA.dataset.slot = b;
+  bagB.dataset.slot = a;
+  setTimeout(() => {
+    bagA.style.transform = '';
+    bagB.style.transform = '';
+    bagA.classList.remove('shuffling');
+    bagB.classList.remove('shuffling');
+    setTimeout(() => cbShuffleSequence(remaining - 1, swapMs, stageW, numBags), 40);
+  }, swapMs);
+}
+
+function cbPick(el) {
+  if (cbBusy || el.classList.contains('locked')) return;
+  cbBusy = true;
+  cbBags.forEach(b => b.classList.add('locked'));
+  const hasCrab = el.classList.contains('has-crab');
+  if (hasCrab) {
+    el.classList.add('busted', 'revealed');
+    cbStreak = 0;
+    cbLives--;
+    cbUpdateHud();
+    // reveal all other crabs too
+    cbBags.forEach(b => { if (b !== el && b.classList.contains('has-crab')) b.classList.add('revealed'); });
+    if (cbLives <= 0) {
+      cbSetPhase(`GAME OVER · reached level ${cbLevel}`, 'reveal');
+      setStatus('cb-status', `💀 The crab got you! Score: ${cbScore}. Press Start to retry.`, 'err');
+    } else {
+      cbSetPhase(`PINCHED! ${cbLives} ${cbLives===1?'life':'lives'} left`, 'reveal');
+      setStatus('cb-status', `🦀 Ouch! Replaying level ${cbLevel}…`, 'err');
+      setTimeout(nextCrabRound, 1800);
+    }
+  } else {
+    el.classList.add('safe-pick');
+    // dim the rest, reveal where the crab(s) were
+    cbBags.forEach(b => {
+      if (b === el) return;
+      b.classList.add('dimmed');
+      if (b.classList.contains('has-crab')) b.classList.add('revealed');
+    });
+    cbScore++; cbStreak++;
+    // level up every 3 successful picks
+    if (cbStreak % 3 === 0 && cbLevel < 10) {
+      cbLevel++;
+      cbSetPhase(`SAFE! Level up → ${cbLevel}`, 'pick');
+      setStatus('cb-status', `🎉 Clean grab! Advancing to level ${cbLevel}…`, 'ok');
+    } else {
+      cbSetPhase('SAFE BAG!', 'pick');
+      setStatus('cb-status', `✓ Safe! Score ${cbScore} · Streak ${cbStreak}`, 'ok');
+    }
+    cbUpdateHud();
+    setTimeout(nextCrabRound, 1500);
+  }
 }
 
 // ── Init ──
