@@ -547,7 +547,7 @@
 <div class="game-panel" id="p3">
   <div class="card yellow">
     <div class="game-title yellow">🔢 QUICK MATH</div>
-    <div class="game-desc">Solve equations fast. All four operations (+  −  ×  ÷) active from level 1. Higher levels: larger numbers, chained steps, tighter time limits.</div>
+    <div class="game-desc">Solve equations fast. Starts with basic arithmetic, then escalates to powers, roots, factorials, logarithms, and modulo. Higher levels chain operations and tighten the timer.</div>
     <div class="hud">
       <div class="hud-item">LEVEL <span class="hud-val yellow" id="m-level">1</span></div>
       <div class="hud-item">SCORE <span class="hud-val" id="m-score">0</span></div>
@@ -969,28 +969,125 @@ function vsClick(i, el) {
 }
 
 // ══════════════════════════════════════════
-//  GAME 3 — QUICK MATH  (all 4 ops fixed)
+//  GAME 3 — QUICK MATH  (arithmetic → advanced)
 // ══════════════════════════════════════════
 /*
-  Level 1–2 : + −
-  Level 3–4 : + − ×
-  Level 5+  : + − × ÷
-  Level 6+  : chained two-step problems for all ops
-  Number ranges grow with level.
+  Level 1 : + −
+  Level 2 : + − × ÷
+  Level 3 : + × ÷  chained two-step
+  Level 4 : powers  (n², n³)
+  Level 5 : roots   (√n for perfect squares)
+  Level 6 : factorials  (n!)
+  Level 7 : logs    (log₂, log₁₀)
+  Level 8 : exponents 2ⁿ / 3ⁿ  +  modulo
+  Level 9 : mixed advanced + chained
+  Level 10: all of the above, harder ranges
+  All answers are integers.
 */
 let mLevel=1, mScore=0, mStreak=0, mAnswer, mRunning=false, mBarTimeout;
 
-// Hint label for which ops are active
 const OPS_HINT = [
-  'OPS: + −',        // level 1
-  'OPS: + −',        // level 2
-  'OPS: + − ×',      // level 3
-  'OPS: + − ×',      // level 4
-  'OPS: + − × ÷',    // level 5
-  'OPS: + − × ÷  [ CHAINED ]', // level 6
-  'OPS: + − × ÷  [ CHAINED ]', // level 7
-  'OPS: + − × ÷  [ CHAINED ]', // level 8
+  'OPS: + −',                                  // 1
+  'OPS: + − × ÷',                              // 2
+  'OPS: + − × ÷  [ CHAINED ]',                  // 3
+  'OPS: + − × ÷  n²  n³',                       // 4
+  'OPS: ×  n²  √n',                             // 5
+  'OPS: n!  n²  ×',                             // 6
+  'OPS: log₂  log₁₀  n!',                        // 7
+  'OPS: 2ⁿ  3ⁿ  mod  n!',                        // 8
+  'OPS: all advanced  [ CHAINED ]',             // 9
+  'OPS: all advanced  [ CHAINED HARD ]',        // 10
 ];
+
+// helpers for advanced problems
+function factorial(n) { let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+function log2int(n)   { return Math.round(Math.log2(n)); }
+function log10int(n)  { return Math.round(Math.log10(n)); }
+
+// build a single sub-expression that has an integer answer
+// returns { eq, ans }
+function mathSubExpr(level) {
+  // pick a pool of generators based on level
+  const pools = {
+    1:  ['add','sub'],
+    2:  ['add','sub','mul','div'],
+    3:  ['add','sub','mul','div'],
+    4:  ['mul','div','sq','cube'],
+    5:  ['mul','sq','sqrt','sqrt'],
+    6:  ['fact','fact','sq','mul'],
+    7:  ['log2','log10','fact','sq'],
+    8:  ['pow2','pow3','mod','fact','log2'],
+    9:  ['sqrt','fact','log2','log10','pow2','pow3','mod','sq','cube'],
+    10: ['sqrt','fact','log2','log10','pow2','pow3','mod','sq','cube'],
+  };
+  const pool = pools[Math.min(level, 10)] || pools[10];
+  const kind = pick(pool);
+
+  switch (kind) {
+    case 'add': {
+      const a = rnd(1, 10 + level*8), b = rnd(1, 10 + level*8);
+      return { eq: `${a} + ${b}`, ans: a + b };
+    }
+    case 'sub': {
+      const a = rnd(1, 10 + level*8), b = rnd(1, 10 + level*8);
+      const [hi, lo] = a >= b ? [a, b] : [b, a];
+      return { eq: `${hi} − ${lo}`, ans: hi - lo };
+    }
+    case 'mul': {
+      const max = 5 + level;
+      const x = rnd(2, max), y = rnd(2, max);
+      return { eq: `${x} × ${y}`, ans: x * y };
+    }
+    case 'div': {
+      const x = rnd(2, 9);
+      const y = rnd(1, 5 + Math.floor(level/2));
+      return { eq: `${x * y} ÷ ${x}`, ans: y };
+    }
+    case 'sq': {
+      const lo = 2 + Math.floor(level/2);
+      const hi = 8 + level;
+      const n  = rnd(lo, hi);
+      return { eq: `${n}²`, ans: n * n };
+    }
+    case 'cube': {
+      const n = rnd(2, 5 + Math.floor(level/2));
+      return { eq: `${n}³`, ans: n * n * n };
+    }
+    case 'sqrt': {
+      // perfect square only
+      const n = rnd(3, 8 + Math.floor(level/2));
+      return { eq: `√${n*n}`, ans: n };
+    }
+    case 'fact': {
+      // keep within reach: 3..6 (i.e. 6,24,120,720)
+      const maxN = level >= 8 ? 7 : 6;          // level 8+: include 7! = 5040
+      const n = rnd(3, maxN);
+      return { eq: `${n}!`, ans: factorial(n) };
+    }
+    case 'log2': {
+      // exponent 2..7 → value 4..128
+      const e = rnd(2, level >= 9 ? 8 : 7);
+      return { eq: `log₂(${Math.pow(2, e)})`, ans: e };
+    }
+    case 'log10': {
+      const e = rnd(2, 4);                       // 100, 1000, 10000
+      return { eq: `log₁₀(${Math.pow(10, e)})`, ans: e };
+    }
+    case 'pow2': {
+      const e = rnd(3, level >= 9 ? 9 : 7);      // 8..512
+      return { eq: `2^${e}`, ans: Math.pow(2, e) };
+    }
+    case 'pow3': {
+      const e = rnd(2, level >= 9 ? 5 : 4);      // 9..243
+      return { eq: `3^${e}`, ans: Math.pow(3, e) };
+    }
+    case 'mod': {
+      const a = rnd(20, 50 + level*10);
+      const b = rnd(3, 9);
+      return { eq: `${a} mod ${b}`, ans: a % b };
+    }
+  }
+}
 
 function startMath() {
   mRunning = true;
@@ -1010,52 +1107,20 @@ function newMathProblem() {
   if (!mRunning) return;
   clearTimeout(mBarTimeout);
 
-  // Update ops hint
-  document.getElementById('math-ops-hint').textContent = OPS_HINT[Math.min(mLevel-1, OPS_HINT.length-1)];
+  document.getElementById('math-ops-hint').textContent =
+    OPS_HINT[Math.min(mLevel-1, OPS_HINT.length-1)];
 
-  // Choose operation pool based on level
-  const ops = mLevel <= 2 ? ['+','-'] :
-              mLevel <= 4 ? ['+','-','*'] :
-                            ['+','-','*','/'];
-  const op = pick(ops);
+  // base sub-expression
+  let { eq, ans } = mathSubExpr(mLevel);
 
-  let eq, ans;
-
-  if (op === '+') {
-    const a = rnd(1, 10 + mLevel*8);
-    const b = rnd(1, 10 + mLevel*8);
-    ans = a + b;
-    eq  = `${a} + ${b}`;
-
-  } else if (op === '-') {
-    const a = rnd(1, 10 + mLevel*8);
-    const b = rnd(1, 10 + mLevel*8);
-    // always present as larger − smaller so answer ≥ 0
-    ans = Math.abs(a - b);
-    eq  = a >= b ? `${a} − ${b}` : `${b} − ${a}`;
-
-  } else if (op === '*') {
-    const maxFactor = 5 + mLevel;   // grows with level
-    const x = rnd(2, maxFactor);
-    const y = rnd(2, maxFactor);
-    ans = x * y;
-    eq  = `${x} × ${y}`;
-
-  } else {
-    // ── DIVISION  (FIX: answer is y, NOT x*y) ──
-    // Build problem as (x*y) ÷ x = y  so answer is always a whole number
-    const x = rnd(2, 9);
-    const y = rnd(1, 5 + Math.floor(mLevel/2));
-    ans = y;           // ← correct answer
-    eq  = `${x * y} ÷ ${x}`;
-  }
-
-  // Level 6+ : chain a second operation onto the result
-  if (mLevel >= 6) {
-    const c   = rnd(1, 10 + mLevel*2);
-    const op2 = pick(['+', '-']);
-    eq  = `( ${eq} ) ${op2==='+'?'+':'−'} ${c}`;
-    ans = op2 === '+' ? ans + c : ans - c;
+  // chain a second operation onto the result for chained levels
+  const chain = (mLevel === 3) || (mLevel >= 9);
+  if (chain) {
+    const op2 = pick(['+', '-', '*']);
+    const c   = op2 === '*' ? rnd(2, 6) : rnd(1, 10 + mLevel*2);
+    if (op2 === '+')      { eq = `(${eq}) + ${c}`; ans = ans + c; }
+    else if (op2 === '-') { eq = `(${eq}) − ${c}`; ans = ans - c; }
+    else                  { eq = `(${eq}) × ${c}`; ans = ans * c; }
   }
 
   mAnswer = ans;
@@ -1068,7 +1133,7 @@ function newMathProblem() {
 
 function startMBar() {
   const bar = document.getElementById('m-bar');
-  const t   = Math.max(3000, 11000 - mLevel*1000);
+  const t   = 30000;
   bar.style.transition = 'none';
   bar.style.width = '100%';
   bar.offsetHeight;
@@ -1092,7 +1157,7 @@ function checkMath() {
     mScore++; mStreak++;
     document.getElementById('m-score').textContent  = mScore;
     document.getElementById('m-streak').textContent = mStreak;
-    if (mStreak % 5 === 0 && mLevel < 8) {
+    if (mStreak % 3 === 0 && mLevel < 10) {
       mLevel++;
       document.getElementById('m-level').textContent = mLevel;
       setStatus('m-status', `🎉 Level up → ${mLevel}!`, 'warn');
