@@ -121,6 +121,7 @@
   #cb-phase-label.reveal  { color: var(--neon-pink); }
   #cb-phase-label.shuffle { color: var(--neon-yellow); }
   #cb-phase-label.pick    { color: var(--neon-green); }
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -445,6 +446,13 @@
   .cm-rule-both   { color: var(--neon-purple); border-color: var(--neon-purple)!important; }
   #cm-rule-wrap   { text-align: center; margin-bottom: 12px; }
 
+  /* ── TASK SWITCH ── */
+  #ts-display { font-family: 'Orbitron', sans-serif; font-size: 3.4rem; font-weight: 900; text-align: center; padding: 22px; letter-spacing: 0.05em; transition: all 0.15s; }
+  #ts-rule-label { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; letter-spacing: 0.12em; text-align: center; padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px; display: inline-block; margin: 0 auto 12px; }
+  .ts-rule-parity    { color: var(--neon-blue);   border-color: var(--neon-blue)   !important; }
+  .ts-rule-magnitude { color: var(--neon-orange); border-color: var(--neon-orange) !important; }
+  #ts-rule-wrap   { text-align: center; margin-bottom: 12px; }
+
   /* ── WORD SCRAMBLE ── */
   #ws-scrambled { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700; text-align: center; color: var(--neon-orange); letter-spacing: 0.25em; margin: 16px 0; text-shadow: 0 0 20px rgba(255,107,0,0.4); }
   .ws-options { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 12px 0; }
@@ -473,7 +481,7 @@
 
 <header>
   <h1>◈ NEURAL ARCADE ◈</h1>
-  <p>12 cognitive training games // sharpen your mind</p>
+  <p>13 cognitive training games // sharpen your mind</p>
 </header>
 
 <nav id="nav">
@@ -489,6 +497,7 @@
   <div class="tab" onclick="showGame(9)">🎯 COLOR MATCH</div>
   <div class="tab" onclick="showGame(10)">📚 WORD SORT</div>
   <div class="tab" onclick="showGame(11)">🦀 CRAB BAG</div>
+  <div class="tab" onclick="showGame(12)">🔀 TASK SWITCH</div>
 </nav>
 
 <main>
@@ -710,6 +719,30 @@
     <div class="cs-cats" id="cs-cats"></div>
     <div class="status" id="cs-status">Categorize each word as fast as you can</div>
     <button class="btn btn-primary" style="background:var(--neon-orange);color:white;" onclick="startWordSort()">START</button>
+  </div>
+</div>
+
+<!-- ─── GAME 12: TASK SWITCH ─── -->
+<div class="game-panel" id="p12">
+  <div class="card yellow">
+    <div class="game-title yellow">🔀 TASK SWITCH</div>
+    <div class="game-desc">The rule shown above the number tells you how to judge it. The rule changes without warning — catch the switch fast and don't run on autopilot.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val yellow" id="ts-level">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="ts-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val green" id="ts-streak">0</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="ts-bar" style="width:100%;background:var(--neon-yellow)"></div></div>
+    <div id="ts-rule-wrap"><div id="ts-rule-label" class="ts-rule-parity">RULE: ODD OR EVEN?</div></div>
+    <div id="ts-display-wrap" style="background:var(--surface2);border-radius:10px;margin:8px 0;border:2px solid var(--border);">
+      <div id="ts-display">—</div>
+    </div>
+    <div class="answer-row" id="ts-answer-row">
+      <button class="ans-btn" id="ts-btn0" onclick="tsAnswer(0)">ODD</button>
+      <button class="ans-btn" id="ts-btn1" onclick="tsAnswer(1)">EVEN</button>
+    </div>
+    <div class="status" id="ts-status">Press Start to play</div>
+    <button class="btn btn-primary" style="background:var(--neon-yellow);color:#0a0a0a;" onclick="startTaskSwitch()">START</button>
   </div>
 </div>
 
@@ -1847,6 +1880,87 @@ function cbPick(el) {
     cbUpdateHud();
     setTimeout(nextCrabRound, 1500);
   }
+}
+
+// ══════════════════════════════════════════
+//  GAME 12 — TASK SWITCH
+// ══════════════════════════════════════════
+let tsLevel=1, tsScore=0, tsStreak=0, tsRunning=false, tsBarT;
+let tsCurrentRule='parity', tsCorrectIndex=0;
+const TS_SWITCH_PROB = [0.20, 0.35, 0.5, 0.65, 0.8]; // chance rule flips each trial, by level
+const TS_MAX_LEVEL = TS_SWITCH_PROB.length;
+
+function startTaskSwitch() {
+  tsRunning = true; tsScore = 0; tsStreak = 0; tsCurrentRule = 'parity';
+  document.getElementById('ts-level').textContent  = tsLevel;
+  document.getElementById('ts-score').textContent  = 0;
+  document.getElementById('ts-streak').textContent = 0;
+  generateTaskSwitch();
+}
+
+function tsApplyRuleUI() {
+  const rl = document.getElementById('ts-rule-label');
+  const b0 = document.getElementById('ts-btn0');
+  const b1 = document.getElementById('ts-btn1');
+  if (tsCurrentRule === 'parity') {
+    rl.textContent = '🔢 RULE: ODD OR EVEN?';
+    rl.className   = 'ts-rule-parity';
+    b0.textContent = 'ODD'; b1.textContent = 'EVEN';
+  } else {
+    rl.textContent = '📏 RULE: LOW (1–4) OR HIGH (6–9)?';
+    rl.className   = 'ts-rule-magnitude';
+    b0.textContent = 'LOW'; b1.textContent = 'HIGH';
+  }
+}
+
+function generateTaskSwitch() {
+  if (!tsRunning) return;
+  clearTimeout(tsBarT);
+  const switchProb = TS_SWITCH_PROB[Math.min(tsLevel-1, TS_SWITCH_PROB.length-1)];
+  if (Math.random() < switchProb) {
+    tsCurrentRule = tsCurrentRule === 'parity' ? 'magnitude' : 'parity';
+  }
+  tsApplyRuleUI();
+  let n; do { n = 1 + Math.floor(Math.random()*9); } while (n === 5); // 5 excluded: ambiguous for LOW/HIGH
+  tsCorrectIndex = tsCurrentRule === 'parity' ? (n % 2 === 0 ? 1 : 0) : (n < 5 ? 0 : 1);
+  document.getElementById('ts-display').textContent = n;
+  setStatus('ts-status', '', 'info');
+  const t = Math.max(1000, 3200 - tsLevel*300);
+  const bar = document.getElementById('ts-bar');
+  bar.style.transition = 'none'; bar.style.width = '100%'; bar.offsetHeight;
+  bar.style.transition = `width ${t}ms linear`; bar.style.width = '0%';
+  tsBarT = setTimeout(() => {
+    tsStreak = 0;
+    document.getElementById('ts-streak').textContent = 0;
+    setStatus('ts-status', '⏱ Too slow!', 'err');
+    setTimeout(generateTaskSwitch, 600);
+  }, t);
+}
+
+function tsAnswer(idx) {
+  if (!tsRunning) return;
+  clearTimeout(tsBarT);
+  const isCorrect = idx === tsCorrectIndex;
+  if (isCorrect) {
+    tsScore++; tsStreak++;
+    document.getElementById('ts-score').textContent  = tsScore;
+    document.getElementById('ts-streak').textContent = tsStreak;
+    if (tsStreak % 8 === 0 && tsLevel < TS_MAX_LEVEL) {
+      tsLevel++;
+      document.getElementById('ts-level').textContent = tsLevel;
+      setStatus('ts-status', `🎉 Level up → ${tsLevel}!`, 'warn');
+    } else {
+      setStatus('ts-status', '✓ Correct!', 'ok');
+    }
+  } else {
+    tsStreak = 0;
+    document.getElementById('ts-streak').textContent = 0;
+    const correctLabel = tsCurrentRule === 'parity'
+      ? (tsCorrectIndex === 1 ? 'EVEN' : 'ODD')
+      : (tsCorrectIndex === 1 ? 'HIGH' : 'LOW');
+    setStatus('ts-status', `✗ Wrong — answer was ${correctLabel}`, 'err');
+  }
+  setTimeout(generateTaskSwitch, 700);
 }
 
 // ── Init ──
