@@ -709,7 +709,7 @@
 <div class="game-panel" id="p10">
   <div class="card orange">
     <div class="game-title orange">📚 WORD CATEGORY SORT</div>
-    <div class="game-desc">Sort words into the correct category as quickly as possible. Higher levels add more categories and rarer words.</div>
+    <div class="game-desc">Sort words into the correct category (Fruits, Countries, Sports, Pizzas, Sandwiches) as quickly as possible.</div>
     <div class="hud">
       <div class="hud-item">LEVEL <span class="hud-val orange" id="cs-level">1</span></div>
       <div class="hud-item">SCORE <span class="hud-val" id="cs-score">0</span></div>
@@ -1659,12 +1659,11 @@ function cmAnswer(yes) {
 //  GAME 10 — WORD CATEGORY SORT
 // ══════════════════════════════════════════
 const CATEGORIES = {
-  Animals:   ['Dog','Cat','Eagle','Whale','Tiger','Elephant','Penguin','Dolphin','Wolf','Fox','Shark','Lion','Gorilla','Parrot','Cobra'],
   Fruits:    ['Apple','Mango','Kiwi','Peach','Grape','Lemon','Berry','Cherry','Melon','Plum','Guava','Papaya','Fig','Date','Lime'],
   Countries: ['France','Japan','Brazil','Canada','Egypt','India','Mexico','Italy','Spain','China','Peru','Ghana','Chile','Vietnam','Greece'],
   Sports:    ['Soccer','Tennis','Hockey','Boxing','Rugby','Swimming','Cricket','Golf','Cycling','Archery','Fencing','Judo','Rowing','Volleyball','Badminton'],
-  Colors:    ['Crimson','Azure','Ivory','Teal','Scarlet','Indigo','Amber','Maroon','Cyan','Violet','Ochre','Jade','Mauve','Coral','Umber'],
-  Science:   ['Photon','Neuron','Genome','Plasma','Osmosis','Catalyst','Entropy','Isotope','Polymer','Quantum','Nebula','Fission','Allele','Valence','Epoch'],
+  Pizzas:    ['Margherita','Pepperoni','Hawaiian','Marinara','Quattro Formaggi','Capricciosa','Diavola','Prosciutto','Vegetarian','Calzone','Sicilian','Neapolitan','BBQ Chicken','Meat Lovers','White Pizza'],
+  Sandwiches:['Club','Reuben','BLT','Philly Cheesesteak','Grilled Cheese','Panini','Hoagie','Po Boy','Cuban','Meatball Sub','Muffuletta','Bánh Mì','Croque Monsieur', 'Monte Cristo', 'French Dip'],
 };
 const CAT_NAMES = Object.keys(CATEGORIES);
 let csLevel=1, csScore=0, csStreak=0, csActiveCats=[], csCurrentCat='';
@@ -1677,8 +1676,7 @@ function startWordSort() {
   nextWordSort();
 }
 function nextWordSort() {
-  const numCats = Math.min(2 + csLevel, 6);
-  csActiveCats  = [...CAT_NAMES].sort(()=>Math.random()-0.5).slice(0, numCats);
+  csActiveCats  = CAT_NAMES;
   csCurrentCat  = pick(csActiveCats);
   const word    = pick(CATEGORIES[csCurrentCat]);
   document.getElementById('cs-item').innerHTML = `<div class="item-tag">${word}</div>`;
@@ -1707,7 +1705,7 @@ function checkWordSort(chosen, word, btn) {
     if (csStreak % 7 === 0 && csLevel < 5) {
       csLevel++;
       document.getElementById('cs-level').textContent = csLevel;
-      setStatus('cs-status', `🎉 Level up → ${csLevel}! More categories now.`, 'warn');
+      setStatus('cs-status', `🎉 Level up → ${csLevel}! Faster pace now.`, 'warn');
     } else {
       setStatus('cs-status', '✓ Correct!', 'ok');
     }
