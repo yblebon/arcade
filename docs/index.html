@@ -485,19 +485,19 @@
 </header>
 
 <nav id="nav">
-  <div class="tab active" onclick="showGame(0)">⚡ REACT</div>
-  <div class="tab" onclick="showGame(1)">🎨 STROOP</div>
-  <div class="tab" onclick="showGame(2)">👁 SEARCH</div>
-  <div class="tab" onclick="showGame(3)">🔢 MATH</div>
-  <div class="tab" onclick="showGame(4)">💡 SEQUENCE</div>
-  <div class="tab" onclick="showGame(5)">🦧 CHIMP</div>
-  <div class="tab" onclick="showGame(6)">🔍 ODD ONE</div>
-  <div class="tab" onclick="showGame(7)">🧠 N-BACK</div>
-  <div class="tab" onclick="showGame(8)">⌨️ TYPING</div>
-  <div class="tab" onclick="showGame(9)">🎯 COLOR MATCH</div>
-  <div class="tab" onclick="showGame(10)">📚 WORD SORT</div>
-  <div class="tab" onclick="showGame(11)">🦀 CRAB BAG</div>
-  <div class="tab" onclick="showGame(12)">🔀 TASK SWITCH</div>
+  <div class="tab active" data-panel="p0" onclick="showGame(this)">⚡ REACT</div>
+  <div class="tab" data-panel="p1" onclick="showGame(this)">🎨 STROOP</div>
+  <div class="tab" data-panel="p2" onclick="showGame(this)">👁 SEARCH</div>
+  <div class="tab" data-panel="p3" onclick="showGame(this)">🔢 MATH</div>
+  <div class="tab" data-panel="p4" onclick="showGame(this)">💡 SEQUENCE</div>
+  <div class="tab" data-panel="p5" onclick="showGame(this)">🦧 CHIMP</div>
+  <div class="tab" data-panel="p6" onclick="showGame(this)">🔍 ODD ONE</div>
+  <div class="tab" data-panel="p7" onclick="showGame(this)">🧠 N-BACK</div>
+  <div class="tab" data-panel="p8" onclick="showGame(this)">⌨️ TYPING</div>
+  <div class="tab" data-panel="p9" onclick="showGame(this)">🎯 COLOR MATCH</div>
+  <div class="tab" data-panel="p10" onclick="showGame(this)">📚 WORD SORT</div>
+  <div class="tab" data-panel="p11" onclick="showGame(this)">🦀 CRAB BAG</div>
+  <div class="tab" data-panel="p12" onclick="showGame(this)">🔀 TASK SWITCH</div>
 </nav>
 
 <main>
@@ -772,9 +772,10 @@
 // ══════════════════════════════════════════
 const tabs   = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.game-panel');
-function showGame(i) {
-  tabs.forEach((t,j)   => t.classList.toggle('active', i===j));
-  panels.forEach((p,j) => p.classList.toggle('active', i===j));
+function showGame(tabEl) {
+  const targetId = tabEl.dataset.panel;
+  tabs.forEach(t   => t.classList.toggle('active', t === tabEl));
+  panels.forEach(p => p.classList.toggle('active', p.id === targetId));
 }
 
 // ══════════════════════════════════════════
