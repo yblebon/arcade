@@ -470,10 +470,41 @@
   .cs-cat-btn.correct { border-color: var(--neon-green)  !important; background: rgba(0,255,159,0.1)  !important; color: var(--neon-green)  !important; }
   .cs-cat-btn.wrong   { border-color: var(--neon-pink)   !important; background: rgba(255,45,120,0.1) !important; color: var(--neon-pink)   !important; }
 
+  /* ── MINESWEEPER ── */
+  #ms-board-wrap { display: flex; justify-content: center; overflow-x: auto; margin: 14px 0; }
+  #ms-board { display: grid; gap: 3px; background: var(--border); padding: 3px; border-radius: 8px; }
+  .ms-cell {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border-radius: 3px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .ms-cell:hover:not(.revealed):not(.flagged) { background: #17284a; }
+  .ms-cell.revealed { background: var(--surface); cursor: default; }
+  .ms-cell.mine.revealed { background: rgba(255,45,120,0.22); }
+  .ms-cell.mine-hit { background: var(--neon-pink) !important; animation: msBoom 0.4s; }
+  @keyframes msBoom { 0%{transform:scale(1)} 40%{transform:scale(1.3)} 100%{transform:scale(1)} }
+  .ms-cell.n1 { color: var(--neon-blue); }
+  .ms-cell.n2 { color: var(--neon-green); }
+  .ms-cell.n3 { color: var(--neon-pink); }
+  .ms-cell.n4 { color: var(--neon-purple); }
+  .ms-cell.n5 { color: var(--neon-orange); }
+  .ms-cell.n6 { color: var(--neon-yellow); }
+  .ms-cell.n7 { color: var(--text); }
+  .ms-cell.n8 { color: var(--text-dim); }
+  #ms-flag-toggle.active { border-color: var(--neon-pink); color: var(--neon-pink) !important; background: rgba(255,45,120,0.08); }
+
   @media (max-width: 520px) {
     nav { gap: 4px; padding: 10px 12px; }
     .tab { font-size: 0.5rem; padding: 6px 9px; }
     #stroop-word { font-size: 2rem; }
+    .ms-cell { width: 24px; height: 24px; font-size: 0.68rem; }
   }
 </style>
 </head>
@@ -481,7 +512,7 @@
 
 <header>
   <h1>◈ NEURAL ARCADE ◈</h1>
-  <p>13 cognitive training games // sharpen your mind</p>
+  <p>14 cognitive training games // sharpen your mind</p>
 </header>
 
 <nav id="nav">
@@ -498,6 +529,7 @@
   <div class="tab" data-panel="p10" onclick="showGame(this)">📚 WORD SORT</div>
   <div class="tab" data-panel="p11" onclick="showGame(this)">🦀 CRAB BAG</div>
   <div class="tab" data-panel="p12" onclick="showGame(this)">🔀 TASK SWITCH</div>
+  <div class="tab" data-panel="p13" onclick="showGame(this)">💣 MINESWEEPER</div>
 </nav>
 
 <main>
@@ -761,6 +793,26 @@
     <div id="cb-stage"></div>
     <div class="status" id="cb-status">Track the crab. Pick a clean bag to survive.</div>
     <button class="btn btn-primary" style="background:var(--neon-pink);color:white;" onclick="newCrabGame()">START</button>
+  </div>
+</div>
+
+<!-- ─── GAME 13: MINESWEEPER ─── -->
+<div class="game-panel" id="p13">
+  <div class="card purple">
+    <div class="game-title purple">💣 MINESWEEPER</div>
+    <div class="game-desc">Clear every safe cell without hitting a mine. Numbers show how many mines touch that cell. Your first click is always safe. Toggle FLAG MODE (or right-click on desktop) to mark suspected mines. Higher levels mean a bigger board and more mines.</div>
+    <div class="hud">
+      <div class="hud-item">LEVEL <span class="hud-val purple" id="ms-level">1</span></div>
+      <div class="hud-item">MINES <span class="hud-val" id="ms-mines">—</span></div>
+      <div class="hud-item">TIME <span class="hud-val green" id="ms-time">0s</span></div>
+      <div class="hud-item">LIVES <span class="hud-val pink" id="ms-lives">3</span></div>
+    </div>
+    <div id="ms-board-wrap"><div id="ms-board"></div></div>
+    <div class="status" id="ms-status">Press Start to play</div>
+    <div style="text-align:center;">
+      <button class="btn btn-outline" id="ms-flag-toggle" onclick="msToggleFlagMode()">🚩 FLAG MODE: OFF</button>
+      <button class="btn btn-primary" style="background:var(--neon-purple);color:white;" onclick="newMinesweeperGame()">START</button>
+    </div>
   </div>
 </div>
 
@@ -1960,6 +2012,212 @@ function tsAnswer(idx) {
     setStatus('ts-status', `✗ Wrong — answer was ${correctLabel}`, 'err');
   }
   setTimeout(generateTaskSwitch, 700);
+}
+
+// ══════════════════════════════════════════
+//  GAME 13 — MINESWEEPER
+// ══════════════════════════════════════════
+let msLevel=1, msLives=3, msRows=6, msCols=6, msMines=5;
+let msBoard=[], msRevealedSafe=0, msTotalSafe=0;
+let msFirstClick=true, msRunning=false, msFlagMode=false, msGameOver=false;
+let msTimerInterval=null, msSeconds=0;
+
+function newMinesweeperGame() {
+  // Full reset — called by the Start button
+  msLevel = 1; msLives = 3;
+  document.getElementById('ms-level').textContent = msLevel;
+  document.getElementById('ms-lives').textContent = msLives;
+  startMinesweeperRound();
+}
+
+function msConfigForLevel(level) {
+  const size  = Math.min(5 + level, 12);                       // 6×6 .. 12×12
+  const mines = Math.max(3, Math.round(size * size * (0.12 + level*0.01)));
+  return { size, mines };
+}
+
+function startMinesweeperRound() {
+  msRunning = true; msGameOver = false; msFirstClick = true; msFlagMode = false;
+  clearInterval(msTimerInterval);
+  msSeconds = 0;
+  document.getElementById('ms-time').textContent = '0s';
+  const flagBtn = document.getElementById('ms-flag-toggle');
+  flagBtn.textContent = '🚩 FLAG MODE: OFF';
+  flagBtn.classList.remove('active');
+
+  const { size, mines } = msConfigForLevel(msLevel);
+  msRows = size; msCols = size; msMines = mines;
+  msBoard = [];
+  for (let r = 0; r < msRows; r++) {
+    const row = [];
+    for (let c = 0; c < msCols; c++) row.push({ mine:false, revealed:false, flagged:false, adj:0 });
+    msBoard.push(row);
+  }
+  msRevealedSafe = 0;
+  msTotalSafe    = msRows*msCols - msMines;
+
+  document.getElementById('ms-level').textContent = msLevel;
+  document.getElementById('ms-mines').textContent = msMines;
+  msRenderBoard();
+  setStatus('ms-status', `Level ${msLevel} — ${msRows}×${msCols} board, ${msMines} mines. First click is always safe.`, 'info');
+  msTimerInterval = setInterval(() => {
+    msSeconds++;
+    document.getElementById('ms-time').textContent = msSeconds + 's';
+  }, 1000);
+}
+
+function msRenderBoard() {
+  const board = document.getElementById('ms-board');
+  board.innerHTML = '';
+  board.style.gridTemplateColumns = `repeat(${msCols}, 1fr)`;
+  for (let r = 0; r < msRows; r++) {
+    for (let c = 0; c < msCols; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'ms-cell';
+      cell.dataset.r = r; cell.dataset.c = c;
+      cell.onclick = () => msCellClick(r, c);
+      cell.oncontextmenu = (e) => { e.preventDefault(); msToggleFlag(r, c); };
+      board.appendChild(cell);
+    }
+  }
+}
+
+function msToggleFlagMode() {
+  if (!msRunning || msGameOver) return;
+  msFlagMode = !msFlagMode;
+  const btn = document.getElementById('ms-flag-toggle');
+  btn.textContent = msFlagMode ? '🚩 FLAG MODE: ON' : '🚩 FLAG MODE: OFF';
+  btn.classList.toggle('active', msFlagMode);
+}
+
+function msCellClick(r, c) {
+  if (!msRunning || msGameOver) return;
+  const cell = msBoard[r][c];
+  if (cell.revealed) return;
+  if (msFlagMode) { msToggleFlag(r, c); return; }
+  if (cell.flagged) return; // unflag first (flag mode or right-click) before revealing
+  if (msFirstClick) {
+    msPlaceMines(r, c);
+    msFirstClick = false;
+  }
+  msReveal(r, c);
+  msCheckWin();
+}
+
+function msToggleFlag(r, c) {
+  if (!msRunning || msGameOver) return;
+  const cell = msBoard[r][c];
+  if (cell.revealed) return;
+  cell.flagged = !cell.flagged;
+  msUpdateCellDisplay(r, c);
+  const flagCount = msBoard.flat().filter(x => x.flagged).length;
+  document.getElementById('ms-mines').textContent = Math.max(0, msMines - flagCount);
+}
+
+function msPlaceMines(safeR, safeC) {
+  const forbidden = new Set();
+  for (let dr=-1; dr<=1; dr++) for (let dc=-1; dc<=1; dc++) {
+    const rr = safeR+dr, cc = safeC+dc;
+    if (rr>=0 && rr<msRows && cc>=0 && cc<msCols) forbidden.add(rr+'_'+cc);
+  }
+  let placed = 0;
+  while (placed < msMines) {
+    const r = rnd(0, msRows-1), c = rnd(0, msCols-1);
+    if (forbidden.has(r+'_'+c) || msBoard[r][c].mine) continue;
+    msBoard[r][c].mine = true; placed++;
+  }
+  for (let r = 0; r < msRows; r++) for (let c = 0; c < msCols; c++) {
+    if (msBoard[r][c].mine) continue;
+    let n = 0;
+    for (let dr=-1; dr<=1; dr++) for (let dc=-1; dc<=1; dc++) {
+      if (dr===0 && dc===0) continue;
+      const rr=r+dr, cc=c+dc;
+      if (rr>=0 && rr<msRows && cc>=0 && cc<msCols && msBoard[rr][cc].mine) n++;
+    }
+    msBoard[r][c].adj = n;
+  }
+}
+
+function msReveal(r, c) {
+  const cell = msBoard[r][c];
+  if (cell.revealed || cell.flagged) return;
+  cell.revealed = true;
+  if (cell.mine) {
+    msUpdateCellDisplay(r, c, true);
+    msLose(r, c);
+    return;
+  }
+  msRevealedSafe++;
+  msUpdateCellDisplay(r, c);
+  if (cell.adj === 0) {
+    for (let dr=-1; dr<=1; dr++) for (let dc=-1; dc<=1; dc++) {
+      if (dr===0 && dc===0) continue;
+      const rr=r+dr, cc=c+dc;
+      if (rr>=0 && rr<msRows && cc>=0 && cc<msCols && !msBoard[rr][cc].revealed) msReveal(rr, cc);
+    }
+  }
+}
+
+function msUpdateCellDisplay(r, c, exploded) {
+  const el = document.querySelector(`.ms-cell[data-r="${r}"][data-c="${c}"]`);
+  if (!el) return;
+  const cell = msBoard[r][c];
+  el.className = 'ms-cell';
+  if (cell.revealed) {
+    el.classList.add('revealed');
+    if (cell.mine) {
+      el.textContent = '💣';
+      el.classList.add('mine');
+      if (exploded) el.classList.add('mine-hit');
+    } else if (cell.adj > 0) {
+      el.textContent = cell.adj;
+      el.classList.add('n' + cell.adj);
+    } else {
+      el.textContent = '';
+    }
+  } else if (cell.flagged) {
+    el.textContent = '🚩';
+  } else {
+    el.textContent = '';
+  }
+}
+
+function msCheckWin() {
+  if (msRevealedSafe < msTotalSafe) return;
+  msGameOver = true; msRunning = false;
+  clearInterval(msTimerInterval);
+  msRevealAllMines();
+  if (msLevel < 10) {
+    msLevel++;
+    setStatus('ms-status', `🎉 Cleared in ${msSeconds}s! Level up → ${msLevel}`, 'ok');
+  } else {
+    setStatus('ms-status', `🏆 Cleared in ${msSeconds}s! Max level reached — nice work.`, 'ok');
+  }
+  document.getElementById('ms-level').textContent = msLevel;
+  setTimeout(startMinesweeperRound, 1800);
+}
+
+function msLose(r, c) {
+  msGameOver = true; msRunning = false;
+  clearInterval(msTimerInterval);
+  msLives--;
+  document.getElementById('ms-lives').textContent = msLives;
+  msRevealAllMines(r, c);
+  if (msLives <= 0) {
+    setStatus('ms-status', `💥 BOOM — out of lives at level ${msLevel}. Press Start to retry.`, 'err');
+  } else {
+    setStatus('ms-status', `💥 Hit a mine! ${msLives} ${msLives===1?'life':'lives'} left — retrying level ${msLevel}…`, 'err');
+    setTimeout(startMinesweeperRound, 1800);
+  }
+}
+
+function msRevealAllMines(hitR, hitC) {
+  for (let r = 0; r < msRows; r++) for (let c = 0; c < msCols; c++) {
+    if (msBoard[r][c].mine) {
+      msBoard[r][c].revealed = true;
+      msUpdateCellDisplay(r, c, r === hitR && c === hitC);
+    }
+  }
 }
 
 // ── Init ──
