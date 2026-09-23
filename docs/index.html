@@ -500,11 +500,44 @@
   .ms-cell.n8 { color: var(--text-dim); }
   #ms-flag-toggle.active { border-color: var(--neon-pink); color: var(--neon-pink) !important; background: rgba(255,45,120,0.08); }
 
+  /* ── VOICE VOLUME METER ── */
+  #vm-current-label { text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px; min-height: 18px; }
+  #vm-pyramid { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 172px; margin-bottom: 18px; }
+  .vm-bar {
+    width: 42px; border-radius: 6px 6px 0 0;
+    display: flex; align-items: flex-start; justify-content: center; padding-top: 6px;
+    font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.85rem; color: #fff;
+    position: relative; opacity: 0.5;
+    transition: opacity 0.2s, filter 0.2s;
+  }
+  .vm-bar.target { opacity: 1; box-shadow: 0 0 16px currentColor; animation: vmPulse 1s infinite; }
+  .vm-bar.current { opacity: 1; }
+  .vm-bar.current::after {
+    content: ''; position: absolute; left: 50%; top: -11px; transform: translateX(-50%);
+    width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent;
+    border-bottom: 9px solid var(--text);
+  }
+  @keyframes vmPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.4); } }
+  #vm-meter-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  #vm-meter-track {
+    width: 26px; height: 172px; flex-shrink: 0;
+    background: var(--surface2); border: 2px solid var(--border); border-radius: 6px;
+    display: flex; align-items: flex-end; overflow: hidden;
+  }
+  #vm-meter-fill {
+    width: 100%; height: 0%;
+    background: linear-gradient(180deg, var(--neon-pink), var(--neon-orange), var(--neon-yellow), var(--neon-green));
+    transition: height 0.08s linear;
+  }
+
   @media (max-width: 520px) {
     nav { gap: 4px; padding: 10px 12px; }
     .tab { font-size: 0.5rem; padding: 6px 9px; }
     #stroop-word { font-size: 2rem; }
     .ms-cell { width: 24px; height: 24px; font-size: 0.68rem; }
+    #vm-pyramid { height: 130px; }
+    .vm-bar { width: 30px; font-size: 0.7rem; }
+    #vm-meter-track { height: 130px; width: 20px; }
   }
 </style>
 </head>
@@ -512,7 +545,7 @@
 
 <header>
   <h1>◈ NEURAL ARCADE ◈</h1>
-  <p>14 cognitive training games // sharpen your mind</p>
+  <p>15 cognitive training games // sharpen your mind</p>
 </header>
 
 <nav id="nav">
@@ -530,6 +563,7 @@
   <div class="tab" data-panel="p11" onclick="showGame(this)">🦀 CRAB BAG</div>
   <div class="tab" data-panel="p12" onclick="showGame(this)">🔀 TASK SWITCH</div>
   <div class="tab" data-panel="p13" onclick="showGame(this)">💣 MINESWEEPER</div>
+  <div class="tab" data-panel="p14" onclick="showGame(this)">🔊 VOICE METER</div>
 </nav>
 
 <main>
@@ -816,6 +850,36 @@
   </div>
 </div>
 
+<!-- ─── GAME 14: VOICE VOLUME METER ─── -->
+<div class="game-panel" id="p14">
+  <div class="card orange">
+    <div class="game-title orange">🔊 VOICE VOLUME METER</div>
+    <div class="game-desc">Match your speaking volume to the highlighted target level on the scale below — from a whisper up to an outside voice — and hold it steady to score. Your browser will ask for microphone access; audio is analyzed locally in real time and is never recorded, stored, or uploaded.</div>
+    <div class="hud">
+      <div class="hud-item">ROUND <span class="hud-val orange" id="vm-round">1</span></div>
+      <div class="hud-item">SCORE <span class="hud-val" id="vm-score">0</span></div>
+      <div class="hud-item">STREAK <span class="hud-val green" id="vm-streak">0</span></div>
+      <div class="hud-item">LIVES <span class="hud-val pink" id="vm-lives">3</span></div>
+    </div>
+    <div id="vm-current-label">🎙️ Mic idle — press Start</div>
+    <div id="vm-pyramid"></div>
+    <div id="vm-meter-wrap">
+      <div id="vm-meter-track"><div id="vm-meter-fill"></div></div>
+      <div style="flex:1;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:4px;">HOLD TARGET</div>
+        <div class="progress-wrap"><div class="progress-bar" id="vm-hold-bar" style="width:0%;background:var(--neon-green);"></div></div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin:10px 0 4px;">TIME LEFT</div>
+        <div class="progress-wrap"><div class="progress-bar" id="vm-time-bar" style="width:100%;background:var(--neon-orange);"></div></div>
+      </div>
+    </div>
+    <div class="status" id="vm-status">Press Start and allow microphone access to play</div>
+    <div style="text-align:center;">
+      <button class="btn btn-outline" onclick="vmStopListening()">STOP</button>
+      <button class="btn btn-primary" style="background:var(--neon-orange);color:#0a0a0a;" onclick="newVoiceMeterGame()">START</button>
+    </div>
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -826,6 +890,10 @@ const tabs   = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.game-panel');
 function showGame(tabEl) {
   const targetId = tabEl.dataset.panel;
+  const prevActive = document.querySelector('.game-panel.active');
+  if (prevActive && prevActive.id === 'p14' && targetId !== 'p14' && typeof vmStopListening === 'function') {
+    vmStopListening();
+  }
   tabs.forEach(t   => t.classList.toggle('active', t === tabEl));
   panels.forEach(p => p.classList.toggle('active', p.id === targetId));
 }
@@ -2220,7 +2288,191 @@ function msRevealAllMines(hitR, hitC) {
   }
 }
 
+// ══════════════════════════════════════════
+//  GAME 14 — VOICE VOLUME METER
+// ══════════════════════════════════════════
+const VM_LEVELS = [
+  { n:1, label:'Whisper',            color:'#7dd3fc' },
+  { n:2, label:'Soft Voice',         color:'#3b82f6' },
+  { n:3, label:'Conversation Voice', color:'#1e3a8a' },
+  { n:4, label:'Presentation Voice', color:'#a855f7' },
+  { n:5, label:'Outside Voice',      color:'#f97316' },
+  { n:6, label:'Shouting Voice',     color:'#dc2626' }
+];
+const VM_THRESH = [0.02, 0.045, 0.08, 0.13, 0.20]; // rms boundaries between levels 1–6
+
+let vmRound=1, vmScore=0, vmStreak=0, vmLives=3;
+let vmTarget=null, vmHoldMs=0, vmHoldNeeded=1500, vmRoundDuration=14000, vmRoundDeadline=0;
+let vmAcceptingInput=false, vmListening=false, vmRunning=false;
+let vmStream=null, vmAudioCtx=null, vmAnalyser=null, vmDataArray=null, vmRafId=null, vmLastFrameTime=0;
+
+function vmBuildPyramid() {
+  const wrap = document.getElementById('vm-pyramid');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  VM_LEVELS.forEach(lvl => {
+    const bar = document.createElement('div');
+    bar.className = 'vm-bar';
+    bar.id = 'vm-bar-' + lvl.n;
+    bar.style.height = (28 + lvl.n * 24) + 'px';
+    bar.style.background = lvl.color;
+    bar.style.color = lvl.color;
+    bar.innerHTML = `<span style="color:#fff;">${lvl.n}</span>`;
+    wrap.appendChild(bar);
+  });
+}
+
+function vmLevelFromRms(rms) {
+  for (let i = 0; i < VM_THRESH.length; i++) if (rms < VM_THRESH[i]) return i + 1;
+  return 6;
+}
+
+function newVoiceMeterGame() {
+  // Full reset — called by the Start button
+  vmRound = 1; vmScore = 0; vmStreak = 0; vmLives = 3;
+  document.getElementById('vm-round').textContent  = vmRound;
+  document.getElementById('vm-score').textContent  = vmScore;
+  document.getElementById('vm-streak').textContent = vmStreak;
+  document.getElementById('vm-lives').textContent  = vmLives;
+  startVoiceMeter();
+}
+
+async function startVoiceMeter() {
+  if (vmListening) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setStatus('vm-status', '🎙️ Your browser does not support microphone access.', 'err');
+    return;
+  }
+  try {
+    vmStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    setStatus('vm-status', '🎙️ Microphone access was blocked or denied. Allow mic access for this site, then press Start again.', 'err');
+    return;
+  }
+  vmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const source = vmAudioCtx.createMediaStreamSource(vmStream);
+  vmAnalyser = vmAudioCtx.createAnalyser();
+  vmAnalyser.fftSize = 2048;
+  source.connect(vmAnalyser);
+  vmDataArray = new Uint8Array(vmAnalyser.fftSize);
+  vmListening = true; vmRunning = true;
+  vmLastFrameTime = performance.now();
+  vmLoop();
+  vmNextRound();
+}
+
+function vmNextRound() {
+  if (!vmRunning) return;
+  let next;
+  do { next = VM_LEVELS[rnd(0, 5)]; } while (vmTarget && next.n === vmTarget.n);
+  vmTarget = next;
+  vmHoldMs = 0;
+  vmHoldNeeded = Math.min(1000 + vmRound * 150, 3000);
+  vmRoundDuration = 14000;
+  vmRoundDeadline = performance.now() + vmRoundDuration;
+  document.querySelectorAll('.vm-bar').forEach(b => b.classList.remove('target'));
+  const bar = document.getElementById('vm-bar-' + vmTarget.n);
+  if (bar) bar.classList.add('target');
+  document.getElementById('vm-hold-bar').style.width = '0%';
+  document.getElementById('vm-time-bar').style.width = '100%';
+  setStatus('vm-status', `Match Level ${vmTarget.n} — ${vmTarget.label} and hold it for ${(vmHoldNeeded/1000).toFixed(1)}s.`, 'info');
+  vmAcceptingInput = true;
+}
+
+function vmLoop() {
+  if (!vmListening) return;
+  vmRafId = requestAnimationFrame(vmLoop);
+  const now = performance.now();
+  const dt  = now - vmLastFrameTime;
+  vmLastFrameTime = now;
+
+  vmAnalyser.getByteTimeDomainData(vmDataArray);
+  let sumSquares = 0;
+  for (let i = 0; i < vmDataArray.length; i++) {
+    const v = (vmDataArray[i] - 128) / 128;
+    sumSquares += v * v;
+  }
+  const rms = Math.sqrt(sumSquares / vmDataArray.length);
+  const currentLevel = vmLevelFromRms(rms);
+
+  document.getElementById('vm-meter-fill').style.height = Math.min(100, rms * 380) + '%';
+  document.querySelectorAll('.vm-bar').forEach(b => b.classList.remove('current'));
+  const curBar = document.getElementById('vm-bar-' + currentLevel);
+  if (curBar) curBar.classList.add('current');
+  document.getElementById('vm-current-label').textContent =
+    `🎙️ Hearing: Level ${currentLevel} — ${VM_LEVELS[currentLevel-1].label}`;
+
+  if (vmAcceptingInput && vmTarget) {
+    if (currentLevel === vmTarget.n) {
+      vmHoldMs = Math.min(vmHoldNeeded, vmHoldMs + dt);
+    } else {
+      vmHoldMs = Math.max(0, vmHoldMs - dt * 0.6);
+    }
+    document.getElementById('vm-hold-bar').style.width = (vmHoldMs / vmHoldNeeded * 100) + '%';
+    const timeLeft = Math.max(0, vmRoundDeadline - now);
+    document.getElementById('vm-time-bar').style.width = (timeLeft / vmRoundDuration * 100) + '%';
+
+    if (vmHoldMs >= vmHoldNeeded) {
+      vmRoundSuccess();
+    } else if (timeLeft <= 0) {
+      vmRoundFail('timeout');
+    }
+  }
+}
+
+function vmRoundSuccess() {
+  vmAcceptingInput = false;
+  vmScore += 10 + vmRound;
+  vmStreak++;
+  vmRound++;
+  document.getElementById('vm-score').textContent  = vmScore;
+  document.getElementById('vm-streak').textContent = vmStreak;
+  document.getElementById('vm-round').textContent  = vmRound;
+  setStatus('vm-status', `🎉 Nailed Level ${vmTarget.n} — ${vmTarget.label}!`, 'ok');
+  setTimeout(vmNextRound, 1200);
+}
+
+function vmRoundFail(reason) {
+  vmAcceptingInput = false;
+  vmStreak = 0;
+  vmLives--;
+  document.getElementById('vm-streak').textContent = 0;
+  document.getElementById('vm-lives').textContent  = Math.max(0, vmLives);
+  if (vmLives <= 0) {
+    setStatus('vm-status', `💀 Out of lives at round ${vmRound}. Press Start to try again.`, 'err');
+    vmStopListening();
+    return;
+  }
+  const msg = reason === 'timeout'
+    ? `⌛ Time's up — needed Level ${vmTarget.n} (${vmTarget.label}). ${vmLives} ${vmLives===1?'life':'lives'} left.`
+    : `Lives left: ${vmLives}.`;
+  setStatus('vm-status', msg, 'err');
+  setTimeout(vmNextRound, 1500);
+}
+
+function vmStopListening() {
+  vmListening = false;
+  vmRunning = false;
+  vmAcceptingInput = false;
+  if (vmRafId) cancelAnimationFrame(vmRafId);
+  if (vmStream) vmStream.getTracks().forEach(t => t.stop());
+  if (vmAudioCtx && vmAudioCtx.state !== 'closed') vmAudioCtx.close();
+  vmStream = null; vmAudioCtx = null; vmAnalyser = null;
+  const fill = document.getElementById('vm-meter-fill');
+  if (fill) fill.style.height = '0%';
+  document.querySelectorAll('.vm-bar').forEach(b => b.classList.remove('current', 'target'));
+  const label = document.getElementById('vm-current-label');
+  if (label) label.textContent = '🎙️ Mic idle — press Start';
+  const holdBar = document.getElementById('vm-hold-bar');
+  const timeBar = document.getElementById('vm-time-bar');
+  if (holdBar) holdBar.style.width = '0%';
+  if (timeBar) timeBar.style.width = '100%';
+}
+
+window.addEventListener('beforeunload', () => { if (vmListening) vmStopListening(); });
+
 // ── Init ──
+vmBuildPyramid();
 startVisSearch();
 startOdd();
 </script>
